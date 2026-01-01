@@ -1,0 +1,50 @@
+# https://www.robotstxt.org/robotstxt.html
+
+# Allow all web crawlers
+User-agent: *
+Allow: /
+Disallow: /api/
+
+# Sitemap location
+Sitemap: https://ypinchuck.com/sitemap.xml
+
+# ===========================================
+# AI Search Engine Bots (GEO Optimization)
+# ===========================================
+
+# OpenAI GPTBot - Used for ChatGPT and browsing
+User-agent: GPTBot
+Allow: /
+
+# Anthropic ClaudeBot
+User-agent: ClaudeBot
+Allow: /
+
+# Anthropic Claude-Web
+User-agent: Claude-Web
+Allow: /
+
+# Perplexity AI
+User-agent: PerplexityBot
+Allow: /
+
+# Google AI (Bard/Gemini)
+User-agent: Google-Extended
+Allow: /
+
+# Bing/Microsoft Copilot
+User-agent: Bingbot
+Allow: /
+
+# Common web crawlers
+User-agent: Googlebot
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+# Host
+Host: https://ypinchuck.com

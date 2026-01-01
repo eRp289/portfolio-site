@@ -1,0 +1,50 @@
+/* Accessibility Styles for Accessibility Widget */
+
+/* High Contrast Mode */
+.high-contrast {
+    filter: contrast(1.25);
+}
+
+.high-contrast body {
+    background: #000 !important;
+    color: #fff !important;
+}
+
+.high-contrast .bg-white,
+.high-contrast .bg-gray-50 {
+    background: #000 !important;
+}
+
+.high-contrast .text-gray-600,
+.high-contrast .text-gray-500,
+.high-contrast .text-gray-400 {
+    color: #fff !important;
+}
+
+/* Highlight Links Mode */
+.highlight-links a {
+    text-decoration: underline !important;
+    text-decoration-thickness: 2px !important;
+    text-underline-offset: 2px !important;
+}
+
+.highlight-links a:focus,
+.highlight-links a:hover {
+    outline: 3px solid #10b981 !important;
+    outline-offset: 2px !important;
+}
+
+/* Pause Animations Mode */
+.pause-animations *,
+.pause-animations *::before,
+.pause-animations *::after {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+    transition-duration: 0s !important;
+    transition-delay: 0s !important;
+}
+
+/* Large Pointer Mode */
+.large-pointer {
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' d='M4 0l16 12.279-6.951 1.17 4.325 8.817-3.596 1.734-4.35-8.879-5.428 4.702z'/%3E%3C/svg%3E"), auto;
+}
