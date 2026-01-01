@@ -15,12 +15,12 @@ export default function Home() {
       <Navbar />
       <main id="main-content" className="bg-white" role="main">
         <Hero />
+        <Contact />
         <About />
-        <Experience />
-        <Education />
         <Skills />
         <Projects />
-        <Contact />
+        <Experience />
+        <Education />
       </main>
       <Footer />
       <AccessibilityWidget />
