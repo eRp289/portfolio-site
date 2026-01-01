@@ -103,7 +103,6 @@ const personSchema = {
   jobTitle: "Tech Professional & AI Specialist",
   description: "Cybersecurity specialist with hands-on experience in police IT systems, law enforcement technology, OSINT investigations, digital forensics, and AI innovation. Skilled in React, Python, and modern web technologies.",
   email: "yehuda@ypinchuck.com",
-  telephone: "+972-58-718-4736",
   url: baseUrl,
   image: "https://avatars.githubusercontent.com/u/152485437",
   sameAs: [
@@ -217,7 +216,7 @@ const faqSchema = {
       name: "How can I contact Yehuda Pinchuck for a project?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "You can contact Yehuda Pinchuck via email at yehuda@ypinchuck.com, by phone at +972-58-718-4736, or through LinkedIn at linkedin.com/in/yehudap. He is open to cybersecurity consulting, development projects, and collaboration opportunities.",
+        text: "You can contact Yehuda Pinchuck via email at yehuda@ypinchuck.com or through LinkedIn at linkedin.com/in/yehudap. He is open to cybersecurity consulting, development projects, and collaboration opportunities.",
       },
     },
   ],
