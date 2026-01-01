@@ -15,7 +15,7 @@ const experiences = [
     },
     {
         title: "Cyber Education Support",
-        company: "Israeli Police • Digital Forensics Division",
+        company: "Israeli Police • Digital Policing Branch",
         period: "Aug 2023 - Present",
         description: "Designing training materials on OSINT, digital forensics, and internet crime. Developing practical exercises to enhance operational readiness in digital policing.",
         tags: ["OSINT", "Digital Forensics", "Training"],
