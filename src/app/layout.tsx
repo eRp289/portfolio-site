@@ -66,9 +66,9 @@ export const metadata: Metadata = {
     creator: "@yehudap",
   },
   icons: {
-    icon: "https://avatars.githubusercontent.com/u/152485437?s=400&u=1cfa80090077633b1ab3446b11c56f8280bd2864&v=4",
-    shortcut: "https://avatars.githubusercontent.com/u/152485437?s=400&u=1cfa80090077633b1ab3446b11c56f8280bd2864&v=4",
-    apple: "https://avatars.githubusercontent.com/u/152485437?s=400&u=1cfa80090077633b1ab3446b11c56f8280bd2864&v=4",
+    icon: "/152485437.webp",
+    shortcut: "/152485437.webp",
+    apple: "/152485437.webp",
   },
   robots: {
     index: true,
