@@ -34,7 +34,10 @@ export default function Hero() {
       {/* Clean gradient background with subtle radial overlay */}
       <motion.div
         className="absolute inset-0 bg-gradient-to-br from-gray-50 via-white to-emerald-50 dark:from-gray-950 dark:via-gray-900 dark:to-emerald-950/50 animate-gradient"
-        style={{ y: backgroundY }}
+        style={{
+          y: backgroundY,
+          willChange: 'transform'
+        }}
         aria-hidden="true"
       />
 
@@ -69,7 +72,11 @@ export default function Hero() {
 
       <motion.div
         className="relative z-10 container mx-auto px-6"
-        style={{ y: textY, opacity }}
+        style={{
+          y: textY,
+          opacity,
+          willChange: 'transform, opacity'
+        }}
       >
         <div className="flex flex-col lg:flex-row items-center justify-center gap-12 lg:gap-20">
           {/* Avatar with refined presentation */}
@@ -89,7 +96,7 @@ export default function Hero() {
               />
               <div className="relative w-full h-full rounded-full overflow-hidden shadow-premium-xl border-4 border-white/80 dark:border-gray-800/80">
                 <Image
-                  src="https://avatars.githubusercontent.com/u/152485437?s=400&u=1cfa80090077633b1ab3446b11c56f8280bd2864&v=4"
+                  src="https://media.licdn.com/dms/image/v2/D4E03AQHswxKaU3PlRQ/profile-displayphoto-shrink_800_800/B4EZOmfTcpHsAc-/0/1733665045239?e=1769040000&v=beta&t=Z55-Y1zWLJiYcBE_Fz3OzpsJK2NSl_1_KvJBH7327iQ"
                   alt="Yehuda Pinchuck - Professional headshot"
                   fill
                   className="object-cover"
