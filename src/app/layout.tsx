@@ -65,6 +65,11 @@ export const metadata: Metadata = {
     description: "Cybersecurity specialist with expertise in police IT systems, OSINT, digital forensics, and AI innovation.",
     creator: "@yehudap",
   },
+  icons: {
+    icon: "https://avatars.githubusercontent.com/u/152485437?s=400&u=1cfa80090077633b1ab3446b11c56f8280bd2864&v=4",
+    shortcut: "https://avatars.githubusercontent.com/u/152485437?s=400&u=1cfa80090077633b1ab3446b11c56f8280bd2864&v=4",
+    apple: "https://avatars.githubusercontent.com/u/152485437?s=400&u=1cfa80090077633b1ab3446b11c56f8280bd2864&v=4",
+  },
   robots: {
     index: true,
     follow: true,
