@@ -9,9 +9,10 @@ const experiences = [
         title: "Innovation & AI Specialist",
         company: "Israeli Police • Digital Policing Branch",
         period: "Aug 2023 - Present",
-        description: "Leading initiatives to introduce innovation and AI within law enforcement. Delivering presentations on AI applications and conducting research on emerging technologies for training enhancement.",
+        description: "Leading initiatives to introduce innovation and AI within law enforcement. Delivered AI training sessions to 100+ law enforcement officers and conducting research on emerging technologies for training enhancement.",
         tags: ["AI", "Innovation", "Education"],
         current: true,
+        note: "Concurrent roles in Digital Policing Branch",
     },
     {
         title: "Cyber Education Support",
@@ -20,6 +21,7 @@ const experiences = [
         description: "Designing training materials on OSINT, digital forensics, and internet crime. Developing practical exercises to enhance operational readiness in digital policing.",
         tags: ["OSINT", "Digital Forensics", "Training"],
         current: true,
+        note: "Concurrent roles in Digital Policing Branch",
     },
     {
         title: "IT Technician",
@@ -91,6 +93,12 @@ export default function Experience() {
                                     <Briefcase className="h-3.5 w-3.5" />
                                     {exp.company}
                                 </p>
+
+                                {exp.note && (
+                                    <p className="text-emerald-600 dark:text-emerald-400 text-xs mb-3 italic">
+                                        {exp.note}
+                                    </p>
+                                )}
 
                                 <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed mb-4">
                                     {exp.description}

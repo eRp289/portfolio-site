@@ -7,7 +7,7 @@ import { Target, Briefcase, GraduationCap, Shield, ArrowUpRight } from "lucide-r
 const highlights = [
     {
         icon: Shield,
-        title: "Cybersecurity",
+        title: "Tech Innovation",
         description: "OSINT, Digital Forensics, Cyber Policing",
     },
     {

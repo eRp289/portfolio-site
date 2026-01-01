@@ -75,11 +75,14 @@ export default function Contact() {
                     viewport={{ once: true }}
                     className="text-center mb-16"
                 >
-                    <span className="text-emerald-600 font-medium text-sm uppercase tracking-widest mb-4 block">Contact</span>
+                    <span className="text-emerald-600 dark:text-emerald-400 font-medium text-sm uppercase tracking-widest mb-4 block">Contact</span>
                     <h2 id="contact-heading" className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
-                        Get in Touch
+                        Let&apos;s Connect
                     </h2>
                     <div className="w-16 h-1 bg-emerald-500 mx-auto rounded-full mb-6" aria-hidden="true" />
+                    <p className="text-gray-600 dark:text-gray-400 text-lg mb-2">
+                        Interested in working together? Reach out and I&apos;ll respond within 24 hours.
+                    </p>
                     <p className="text-gray-600 dark:text-gray-400 max-w-xl mx-auto">
                         Feel free to reach out for collaborations, opportunities, or just to say hello!
                     </p>

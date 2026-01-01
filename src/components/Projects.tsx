@@ -37,7 +37,7 @@ const projects: Project[] = [
     },
     {
         title: "Test Management System",
-        description: "A comprehensive testing platform featuring two integrated sites: a trainee portal for taking assessments and an admin dashboard for creating questions, grading tests, and viewing detailed analytics.",
+        description: "A comprehensive testing platform featuring two integrated sites: a trainee portal for taking assessments and an admin dashboard for creating questions, grading tests, and viewing detailed analytics. Features Firebase real-time sync enabling simultaneous admin grading and trainee test-taking without data collisions.",
         tags: ["React", "Next.js", "Firebase", "Analytics"],
         image: "/testsitepic.png",
         color: "blue",

@@ -21,7 +21,7 @@ const skillCategories = [
         skills: ["Python", "SQL", "Excel", "Data Visualization", "Statistics"],
     },
     {
-        title: "Cybersecurity",
+        title: "Tech Innovation",
         icon: Shield,
         skills: ["OSINT", "Digital Forensics", "Cyber Policing", "Internet Crime", "Deepfake Detection"],
     },
