@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
-import { Target, Briefcase, GraduationCap, Shield, ArrowUpRight } from "lucide-react";
+import { Target, Briefcase, Shield, ArrowUpRight } from "lucide-react";
 
 const highlights = [
     {
@@ -19,11 +19,6 @@ const highlights = [
         icon: Target,
         title: "AI Innovation",
         description: "Emerging Tech in Law Enforcement",
-    },
-    {
-        icon: GraduationCap,
-        title: "Education",
-        description: "Business Admin & Information Systems",
     },
 ];
 
@@ -51,7 +46,7 @@ export default function About() {
                     </p>
                 </motion.div>
 
-                <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
                     {highlights.map((item, index) => {
                         return (
                             <motion.div

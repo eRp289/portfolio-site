@@ -109,28 +109,12 @@ export default function Hero() {
             </div>
           </motion.div>
 
-          {/* Text content */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
             className="text-center lg:text-left"
           >
-            <motion.div
-              className="inline-flex items-center gap-2 mb-6 px-4 py-2.5 glass rounded-full shadow-premium"
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.3, type: "spring", stiffness: 150 }}
-            >
-              <motion.span
-                className="w-2 h-2 bg-emerald-500 rounded-full"
-                animate={{ scale: [1, 1.2, 1], opacity: [1, 0.7, 1] }}
-                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                aria-hidden="true"
-              />
-              <span className="text-gray-600 dark:text-gray-300 text-sm font-medium">Available for opportunities</span>
-            </motion.div>
-
             <motion.h1
               className="text-4xl sm:text-5xl md:text-7xl font-bold text-gray-900 dark:text-white mb-4 tracking-tight"
               initial={{ opacity: 0, y: 20 }}
