@@ -41,7 +41,7 @@ export default function About() {
                     <p className="text-gray-600 dark:text-gray-400 text-lg leading-relaxed">
                         Motivated and detail-oriented tech professional with hands-on
                         experience in police IT systems, instructional support, and
-                        cybersecurity. Passionate about applying technical and
+                        innovative technology solutions. Passionate about applying technical and
                         analytical skills to solve real-world challenges.
                     </p>
                 </motion.div>

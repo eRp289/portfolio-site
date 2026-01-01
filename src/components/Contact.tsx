@@ -80,6 +80,26 @@ export default function Contact() {
                         Let&apos;s Connect
                     </h2>
                     <div className="w-16 h-1 bg-emerald-500 mx-auto rounded-full mb-6" aria-hidden="true" />
+
+                    {/* Value Proposition Highlights */}
+                    <div className="bg-emerald-50 dark:bg-emerald-900/20 rounded-xl p-6 mb-6 border border-emerald-100 dark:border-emerald-800">
+                        <p className="text-gray-700 dark:text-gray-300 font-medium mb-3">Why work with me:</p>
+                        <ul className="space-y-2 text-left">
+                            <li className="flex items-start gap-2">
+                                <span className="text-emerald-600 dark:text-emerald-400 mt-1">✓</span>
+                                <span className="text-gray-600 dark:text-gray-400 text-sm">Trained 100+ law enforcement officers in AI and emerging technologies</span>
+                            </li>
+                            <li className="flex items-start gap-2">
+                                <span className="text-emerald-600 dark:text-emerald-400 mt-1">✓</span>
+                                <span className="text-gray-600 dark:text-gray-400 text-sm">Built real-time collaboration systems for police training academies</span>
+                            </li>
+                            <li className="flex items-start gap-2">
+                                <span className="text-emerald-600 dark:text-emerald-400 mt-1">✓</span>
+                                <span className="text-gray-600 dark:text-gray-400 text-sm">Specialized in OSINT, digital forensics, and law enforcement tech innovation</span>
+                            </li>
+                        </ul>
+                    </div>
+
                     <p className="text-gray-600 dark:text-gray-400 text-lg mb-2">
                         Interested in working together? Reach out and I&apos;ll respond within 24 hours.
                     </p>
