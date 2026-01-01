@@ -87,11 +87,11 @@ export default function Contact() {
                         <ul className="space-y-2 text-left">
                             <li className="flex items-start gap-2">
                                 <span className="text-emerald-600 dark:text-emerald-400 mt-1">✓</span>
-                                <span className="text-gray-600 dark:text-gray-400 text-sm">Trained 100+ law enforcement officers in AI and emerging technologies</span>
+                                <span className="text-gray-600 dark:text-gray-400 text-sm">Trained 1000+ law enforcement officers in AI and emerging technologies</span>
                             </li>
                             <li className="flex items-start gap-2">
                                 <span className="text-emerald-600 dark:text-emerald-400 mt-1">✓</span>
-                                <span className="text-gray-600 dark:text-gray-400 text-sm">Built real-time collaboration systems for police training academies</span>
+                                <span className="text-gray-600 dark:text-gray-400 text-sm">Built real-time collaboration systems for police training </span>
                             </li>
                             <li className="flex items-start gap-2">
                                 <span className="text-emerald-600 dark:text-emerald-400 mt-1">✓</span>
