@@ -4,7 +4,7 @@ import { motion, useScroll, useTransform, MotionValue } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowDown, Mail, Linkedin, Github, ChevronRight } from "lucide-react";
 import Image from "next/image";
-import { useRef, useEffect, useState, useMemo } from "react";
+import { useRef, useEffect, useState } from "react";
 import { debounce } from "@/lib/utils";
 
 const socialLinks = [
@@ -47,27 +47,19 @@ export default function Hero() {
     offset: ["start start", "end start"],
   });
 
-  // Memoize parallax transforms - only recreate when dependencies change
-  const backgroundY = useMemo(() => {
-    if (isMobile || prefersReducedMotion) {
-      return useTransform(() => "0%");
-    }
-    return useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
-  }, [scrollYProgress, isMobile, prefersReducedMotion]);
+  // Create transforms at the top level (not inside useMemo)
+  const backgroundYTransform = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
+  const textYTransform = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
+  const opacityTransform = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
 
-  const textY = useMemo(() => {
-    if (isMobile || prefersReducedMotion) {
-      return useTransform(() => "0%");
-    }
-    return useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
-  }, [scrollYProgress, isMobile, prefersReducedMotion]);
+  // Static transforms for mobile/reduced motion
+  const staticTransformY = useTransform(() => "0%");
+  const staticTransformOpacity = useTransform(() => 1);
 
-  const opacity = useMemo(() => {
-    if (isMobile || prefersReducedMotion) {
-      return useTransform(() => 1);
-    }
-    return useTransform(scrollYProgress, [0, 0.5], [1, 0]);
-  }, [scrollYProgress, isMobile, prefersReducedMotion]);
+  // Choose which transforms to use based on conditions
+  const backgroundY = (isMobile || prefersReducedMotion) ? staticTransformY : backgroundYTransform;
+  const textY = (isMobile || prefersReducedMotion) ? staticTransformY : textYTransform;
+  const opacity = (isMobile || prefersReducedMotion) ? staticTransformOpacity : opacityTransform;
 
   return (
     <section

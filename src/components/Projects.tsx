@@ -63,22 +63,52 @@ function TiltCard({ children, className }: { children: React.ReactNode; classNam
     const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["10deg", "-10deg"]);
     const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-10deg", "10deg"]);
 
-    const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const updatePosition = (clientX: number, clientY: number) => {
         if (!ref.current) return;
         const rect = ref.current.getBoundingClientRect();
         const width = rect.width;
         const height = rect.height;
-        const mouseX = e.clientX - rect.left;
-        const mouseY = e.clientY - rect.top;
+        const mouseX = clientX - rect.left;
+        const mouseY = clientY - rect.top;
         const xPct = mouseX / width - 0.5;
         const yPct = mouseY / height - 0.5;
-        x.set(xPct * 0.5); // Reduced intensity
-        y.set(yPct * 0.5); // Reduced intensity
+
+        // Guard against undefined .set method
+        if (x && typeof x.set === 'function') {
+            x.set(xPct * 0.5); // Reduced intensity
+        }
+        if (y && typeof y.set === 'function') {
+            y.set(yPct * 0.5); // Reduced intensity
+        }
+    };
+
+    const resetPosition = () => {
+        // Guard against undefined .set method
+        if (x && typeof x.set === 'function') {
+            x.set(0);
+        }
+        if (y && typeof y.set === 'function') {
+            y.set(0);
+        }
+    };
+
+    const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+        updatePosition(e.clientX, e.clientY);
+    };
+
+    const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
+        if (e.touches.length > 0) {
+            const touch = e.touches[0];
+            updatePosition(touch.clientX, touch.clientY);
+        }
     };
 
     const handleMouseLeave = () => {
-        x.set(0);
-        y.set(0);
+        resetPosition();
+    };
+
+    const handleTouchEnd = () => {
+        resetPosition();
     };
 
     return (
@@ -86,6 +116,8 @@ function TiltCard({ children, className }: { children: React.ReactNode; classNam
             ref={ref}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
             style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
             className={`perspective-container ${className}`}
         >
