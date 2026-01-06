@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Mail, Linkedin, MapPin, Send, CheckCircle, ExternalLink, AlertCircle } from "lucide-react";
+import { Mail, Linkedin, MapPin, Send, CheckCircle, ExternalLink, AlertCircle, WifiOff, X } from "lucide-react";
+import { isOnline, saveFormData, getFormData, clearFormData } from "@/lib/utils";
 
 const contactInfo = [
     {
@@ -29,18 +30,86 @@ const contactInfo = [
     },
 ] as const;
 
+const FORM_ID = "contact-form";
+
+type FormData = {
+    name: string;
+    email: string;
+    message: string;
+};
+
 export default function Contact() {
     const [result, setResult] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
+    const [isOffline, setIsOffline] = useState(false);
+    const [errorType, setErrorType] = useState<"network" | "server" | "validation" | null>(null);
+
+    // Check online status
+    useEffect(() => {
+        const updateOnlineStatus = () => {
+            setIsOffline(!isOnline());
+        };
+
+        updateOnlineStatus();
+        window.addEventListener("online", updateOnlineStatus);
+        window.addEventListener("offline", updateOnlineStatus);
+
+        return () => {
+            window.removeEventListener("online", updateOnlineStatus);
+            window.removeEventListener("offline", updateOnlineStatus);
+        };
+    }, []);
+
+    // Restore form data on mount
+    useEffect(() => {
+        const savedData = getFormData(FORM_ID);
+        if (savedData) {
+            const form = document.getElementById(FORM_ID) as HTMLFormElement;
+            if (form) {
+                Object.entries(savedData).forEach(([key, value]) => {
+                    const input = form.elements.namedItem(key) as HTMLInputElement | HTMLTextAreaElement;
+                    if (input) input.value = value;
+                });
+            }
+        }
+    }, []);
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setIsSubmitting(true);
         setResult("");
+        setErrorType(null);
+
+        // Check if offline
+        if (!isOnline()) {
+            setErrorType("network");
+            setResult("You appear to be offline. Please check your connection and try again.");
+            setIsSubmitting(false);
+            return;
+        }
 
         const formData = new FormData(event.currentTarget);
-        formData.append("access_key", "55aa0edc-fa6b-4702-a5b7-0054551d9393");
+
+        // Save form data in case of error
+        const formDataObj: FormData = {
+            name: formData.get("name") as string,
+            email: formData.get("email") as string,
+            message: formData.get("message") as string,
+        };
+        saveFormData(FORM_ID, formDataObj);
+
+        // Add API key from environment variable
+        const apiKey = process.env.NEXT_PUBLIC_WEB3FORMS_KEY;
+        if (!apiKey) {
+            console.error("Web3Forms API key is not configured");
+            setErrorType("server");
+            setResult("Configuration error. Please contact the site administrator.");
+            setIsSubmitting(false);
+            return;
+        }
+
+        formData.append("access_key", apiKey);
 
         try {
             const response = await fetch("https://api.web3forms.com/submit", {
@@ -53,16 +122,43 @@ export default function Contact() {
             if (data.success) {
                 setIsSubmitted(true);
                 setResult("Success!");
+                clearFormData(FORM_ID);
                 (event.target as HTMLFormElement).reset();
-                setTimeout(() => setIsSubmitted(false), 5000);
+
+                // Focus on success message for accessibility
+                setTimeout(() => {
+                    const successDiv = document.getElementById("success-message");
+                    successDiv?.focus();
+                }, 100);
             } else {
-                setResult("Error sending message. Please try again.");
+                setErrorType("server");
+                if (response.status === 429) {
+                    setResult("Too many requests. Please try again in a few minutes.");
+                } else if (response.status >= 500) {
+                    setResult("Server error. Please try again later.");
+                } else {
+                    setResult(data.message || "Error sending message. Please try again.");
+                }
             }
-        } catch {
-            setResult("Error sending message. Please try again.");
+        } catch (error) {
+            // Check if it's a network error
+            if (error instanceof TypeError && error.message.includes("fetch")) {
+                setErrorType("network");
+                setResult("Network error. Please check your connection and try again.");
+            } else {
+                setErrorType("server");
+                setResult("Unexpected error. Please try again later.");
+            }
+            console.error("Form submission error:", error);
         }
 
         setIsSubmitting(false);
+    };
+
+    const dismissSuccess = () => {
+        setIsSubmitted(false);
+        setResult("");
+        clearFormData(FORM_ID);
     };
 
     return (
@@ -107,6 +203,21 @@ export default function Contact() {
                         Feel free to reach out for collaborations, opportunities, or just to say hello!
                     </p>
                 </motion.div>
+
+                {/* Offline Warning */}
+                {isOffline && (
+                    <motion.div
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="max-w-5xl mx-auto mb-6 p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg flex items-center gap-3"
+                        role="alert"
+                    >
+                        <WifiOff className="h-5 w-5 text-amber-600 dark:text-amber-400" aria-hidden="true" />
+                        <p className="text-amber-800 dark:text-amber-200 text-sm">
+                            You&apos;re currently offline. Please check your internet connection.
+                        </p>
+                    </motion.div>
+                )}
 
                 <div className="max-w-5xl mx-auto grid lg:grid-cols-2 gap-12">
                     {/* Contact Info */}
@@ -177,21 +288,54 @@ export default function Contact() {
                                 </h3>
 
                                 {isSubmitted ? (
-                                    <div className="text-center py-12" role="status" aria-live="polite">
-                                        <div className="inline-flex p-4 bg-emerald-100 rounded-full mb-4" aria-hidden="true">
-                                            <CheckCircle className="h-8 w-8 text-emerald-600" />
+                                    <div
+                                        id="success-message"
+                                        className="text-center py-12"
+                                        role="status"
+                                        aria-live="polite"
+                                        tabIndex={-1}
+                                    >
+                                        <div className="inline-flex p-4 bg-emerald-100 dark:bg-emerald-900/30 rounded-full mb-4" aria-hidden="true">
+                                            <CheckCircle className="h-8 w-8 text-emerald-600 dark:text-emerald-400" />
                                         </div>
-                                        <h4 className="text-xl font-semibold text-gray-900 mb-2">Message Sent!</h4>
-                                        <p className="text-gray-600">Thank you for reaching out. I&apos;ll get back to you soon.</p>
+                                        <h4 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Message Sent!</h4>
+                                        <p className="text-gray-600 dark:text-gray-400 mb-6">Thank you for reaching out. I&apos;ll get back to you soon.</p>
+                                        <Button
+                                            onClick={dismissSuccess}
+                                            variant="outline"
+                                            className="mt-4"
+                                        >
+                                            <X className="mr-2 h-4 w-4" aria-hidden="true" />
+                                            Dismiss
+                                        </Button>
                                     </div>
                                 ) : (
-                                    <form onSubmit={handleSubmit} className="space-y-5">
-                                        {result && result.includes("Error") && (
-                                            <div className="p-4 bg-red-50 border border-red-200 rounded-lg flex items-center gap-3" role="alert">
-                                                <AlertCircle className="h-5 w-5 text-red-500" aria-hidden="true" />
-                                                <p className="text-red-700 text-sm">{result}</p>
+                                    <form id={FORM_ID} onSubmit={handleSubmit} className="space-y-5">
+                                        {result && errorType && (
+                                            <div
+                                                className={`p-4 border rounded-lg flex items-center gap-3 ${errorType === "network"
+                                                        ? "bg-amber-50 dark:bg-amber-900/20 border-amber-200 dark:border-amber-800"
+                                                        : "bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800"
+                                                    }`}
+                                                role="alert"
+                                                aria-live="assertive"
+                                            >
+                                                {errorType === "network" ? (
+                                                    <WifiOff className="h-5 w-5 text-amber-600 dark:text-amber-400" aria-hidden="true" />
+                                                ) : (
+                                                    <AlertCircle className="h-5 w-5 text-red-500 dark:text-red-400" aria-hidden="true" />
+                                                )}
+                                                <p className={`text-sm ${errorType === "network"
+                                                        ? "text-amber-800 dark:text-amber-200"
+                                                        : "text-red-700 dark:text-red-300"
+                                                    }`}>
+                                                    {result}
+                                                </p>
                                             </div>
                                         )}
+
+                                        {/* Honeypot field for bot protection */}
+                                        <input type="text" name="botcheck" style={{ display: 'none' }} tabIndex={-1} autoComplete="off" />
 
                                         <input type="hidden" name="subject" value="New Contact Form Submission from Portfolio" />
 
@@ -240,7 +384,7 @@ export default function Contact() {
                                         <Button
                                             type="submit"
                                             className="w-full bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-600 dark:hover:bg-emerald-700 text-white py-6 text-lg font-medium rounded-xl shadow-premium-lg hover-lift transition-premium focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
-                                            disabled={isSubmitting}
+                                            disabled={isSubmitting || isOffline}
                                             aria-busy={isSubmitting}
                                         >
                                             {isSubmitting ? (

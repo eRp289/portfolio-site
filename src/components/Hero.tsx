@@ -1,10 +1,11 @@
 "use client";
 
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, MotionValue } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowDown, Mail, Linkedin, Github, ChevronRight } from "lucide-react";
 import Image from "next/image";
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState, useMemo } from "react";
+import { debounce } from "@/lib/utils";
 
 const socialLinks = [
   { icon: Mail, href: "mailto:yehuda@ypinchuck.com", label: "Send email to Yehuda", external: false },
@@ -15,12 +16,30 @@ const socialLinks = [
 export default function Hero() {
   const containerRef = useRef<HTMLElement>(null);
   const [isMobile, setIsMobile] = useState(false);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+
+  useEffect(() => {
+    // Check for reduced motion preference
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    setPrefersReducedMotion(mediaQuery.matches);
+
+    const handleChange = (e: MediaQueryListEvent) => {
+      setPrefersReducedMotion(e.matches);
+    };
+
+    mediaQuery.addEventListener('change', handleChange);
+    return () => mediaQuery.removeEventListener('change', handleChange);
+  }, []);
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
     checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
+
+    // Debounced resize handler to prevent excessive re-renders
+    const debouncedResize = debounce(checkMobile, 300);
+    window.addEventListener("resize", debouncedResize);
+
+    return () => window.removeEventListener("resize", debouncedResize);
   }, []);
 
   const { scrollYProgress } = useScroll({
@@ -28,10 +47,27 @@ export default function Hero() {
     offset: ["start start", "end start"],
   });
 
-  // Parallax effects - disabled on mobile for performance
-  const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", isMobile ? "0%" : "50%"]);
-  const textY = useTransform(scrollYProgress, [0, 1], ["0%", isMobile ? "0%" : "100%"]);
-  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, isMobile ? 1 : 0]);
+  // Memoize parallax transforms - only recreate when dependencies change
+  const backgroundY = useMemo(() => {
+    if (isMobile || prefersReducedMotion) {
+      return useTransform(() => "0%");
+    }
+    return useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
+  }, [scrollYProgress, isMobile, prefersReducedMotion]);
+
+  const textY = useMemo(() => {
+    if (isMobile || prefersReducedMotion) {
+      return useTransform(() => "0%");
+    }
+    return useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
+  }, [scrollYProgress, isMobile, prefersReducedMotion]);
+
+  const opacity = useMemo(() => {
+    if (isMobile || prefersReducedMotion) {
+      return useTransform(() => 1);
+    }
+    return useTransform(scrollYProgress, [0, 0.5], [1, 0]);
+  }, [scrollYProgress, isMobile, prefersReducedMotion]);
 
   return (
     <section
@@ -105,7 +141,7 @@ export default function Hero() {
               />
               <div className="relative w-full h-full rounded-full overflow-hidden shadow-premium-xl border-4 border-white/80 dark:border-gray-800/80">
                 <Image
-                  src="https://media.licdn.com/dms/image/v2/D4E03AQHswxKaU3PlRQ/profile-displayphoto-shrink_800_800/B4EZOmfTcpHsAc-/0/1733665045239?e=1769040000&v=beta&t=Z55-Y1zWLJiYcBE_Fz3OzpsJK2NSl_1_KvJBH7327iQ"
+                  src="/images/profile.jpg"
                   alt="Yehuda Pinchuck - Professional headshot"
                   fill
                   className="object-cover"
