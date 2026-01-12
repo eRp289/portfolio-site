@@ -16,11 +16,11 @@ export default function Home() {
       <main id="main-content" className="bg-white" role="main">
         <Hero />
         <AvailableBanner />
-        <Contact />
         <About />
         <Skills />
         <Projects />
         <Experience />
+        <Contact />
       </main>
       <Footer />
       <AccessibilityWidget />

@@ -2,7 +2,7 @@
 
 import { motion, useScroll, useTransform, MotionValue } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { ArrowDown, Mail, Linkedin, Github, ChevronRight } from "lucide-react";
+import { Mail, Linkedin, Github, ChevronRight } from "lucide-react";
 import Image from "next/image";
 import { useRef, useEffect, useState } from "react";
 import { debounce } from "@/lib/utils";
@@ -253,17 +253,6 @@ export default function Hero() {
           </motion.div>
         </div>
 
-        <motion.div
-          className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
-          animate={{ y: [0, 8, 0] }}
-          transition={{ duration: 2, repeat: Infinity }}
-          aria-hidden="true"
-        >
-          <div className="flex flex-col items-center gap-2">
-            <span className="text-xs text-gray-400 dark:text-gray-500 uppercase tracking-widest">Scroll</span>
-            <ArrowDown className="h-4 w-4 text-gray-400 dark:text-gray-500" />
-          </div>
-        </motion.div>
       </motion.div>
     </section>
   );

@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import Image from "next/image";
 
 const navLinks = [
     { name: "Home", href: "#home" },
@@ -76,7 +77,7 @@ export default function Navbar() {
                         {/* Logo */}
                         <motion.a
                             href="#home"
-                            className="text-xl font-bold text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 rounded-lg px-2 py-1"
+                            className="flex items-center focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 rounded-lg"
                             whileHover={{ scale: 1.05 }}
                             onClick={(e) => {
                                 e.preventDefault();
@@ -84,7 +85,14 @@ export default function Navbar() {
                             }}
                             aria-label="Yehuda Pinchuck - Home"
                         >
-                            YP<span className="text-emerald-600">.</span>
+                            <Image
+                                src="/name_logo.png"
+                                alt="Yehuda Pinchuck Logo"
+                                width={120}
+                                height={40}
+                                className="h-8 w-auto"
+                                priority
+                            />
                         </motion.a>
 
                         {/* Desktop Navigation */}
