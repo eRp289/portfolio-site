@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     default: "Yehuda Pinchuck | Tech Professional & AI Specialist | USA & Israel",
     template: "%s | Yehuda Pinchuck",
   },
-  description: "Yehuda Pinchuck is a cybersecurity specialist and tech professional with expertise in police IT systems, OSINT, digital forensics, React, Python, and AI. Available for opportunities in the USA and Israel.",
+  description: "Yehuda Pinchuck is a  tech professional with expertise in police IT systems, OSINT, digital forensics, React, Python, and AI. Available for opportunities in the USA and Israel.",
   keywords: [
     "Yehuda Pinchuck",
     "Tech Professional",
