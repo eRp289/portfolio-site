@@ -4,7 +4,8 @@ import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Moon, Sun } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import IconButton from "@mui/material/IconButton";
+import Box from "@mui/material/Box";
 
 export function ThemeToggle() {
     const { theme, setTheme, resolvedTheme } = useTheme();
@@ -16,20 +17,29 @@ export function ThemeToggle() {
 
     if (!mounted) {
         return (
-            <Button variant="ghost" size="icon" className="w-9 h-9" disabled>
-                <Sun className="h-4 w-4" />
-            </Button>
+            <IconButton size="small" sx={{ width: 36, height: 36 }} disabled>
+                <Sun size={16} />
+            </IconButton>
         );
     }
 
     const isDark = resolvedTheme === "dark";
 
     return (
-        <Button
-            variant="ghost"
-            size="icon"
+        <IconButton
+            size="small"
             onClick={() => setTheme(isDark ? "light" : "dark")}
-            className="w-9 h-9 relative overflow-hidden bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full"
+            sx={{
+                width: 36,
+                height: 36,
+                position: "relative",
+                overflow: "hidden",
+                bgcolor: isDark ? "rgba(31, 41, 55, 1)" : "rgba(243, 244, 246, 1)", // gray-800 : gray-100
+                "&:hover": {
+                    bgcolor: isDark ? "rgba(55, 65, 81, 1)" : "rgba(229, 231, 235, 1)", // gray-700 : gray-200
+                },
+                borderRadius: "50%",
+            }}
             aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
         >
             <motion.div
@@ -39,9 +49,9 @@ export function ThemeToggle() {
                     scale: isDark ? 0 : 1,
                 }}
                 transition={{ duration: 0.3, ease: "easeInOut" }}
-                className="absolute"
+                style={{ position: "absolute", display: "flex" }}
             >
-                <Sun className="h-4 w-4 text-amber-500" />
+                <Sun size={16} className="text-amber-500" />
             </motion.div>
             <motion.div
                 initial={false}
@@ -50,10 +60,10 @@ export function ThemeToggle() {
                     scale: isDark ? 1 : 0,
                 }}
                 transition={{ duration: 0.3, ease: "easeInOut" }}
-                className="absolute"
+                style={{ position: "absolute", display: "flex" }}
             >
-                <Moon className="h-4 w-4 text-blue-400" />
+                <Moon size={16} className="text-blue-400" />
             </motion.div>
-        </Button>
+        </IconButton>
     );
 }

@@ -1,10 +1,20 @@
 "use client";
 
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { ExternalLink, Github } from "lucide-react";
 import { useRef } from "react";
+import Box from "@mui/material/Box";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import CardMedia from "@mui/material/CardMedia";
+import Chip from "@mui/material/Chip";
+import Grid from "@mui/material/Grid";
+import Link from "@mui/material/Link";
+import IconButton from "@mui/material/IconButton";
+import Stack from "@mui/material/Stack";
+import Button from "@mui/material/Button";
 
 interface Project {
     title: string;
@@ -24,7 +34,7 @@ const projects: Project[] = [
         liveUrl: "https://crypto-project-phi-five.vercel.app/",
         image: "/crpytopic.png",
         color: "purple",
-        gradient: "from-purple-500 to-indigo-600",
+        gradient: "linear-gradient(135deg, #a855f7 0%, #4f46e5 100%)",
     },
     {
         title: "Insta-Chapopo",
@@ -33,7 +43,7 @@ const projects: Project[] = [
         liveUrl: "https://insta-gcli.vercel.app/",
         image: "/instapic.png",
         color: "pink",
-        gradient: "from-pink-500 to-rose-600",
+        gradient: "linear-gradient(135deg, #ec4899 0%, #e11d48 100%)",
     },
     {
         title: "Test Management System",
@@ -41,15 +51,9 @@ const projects: Project[] = [
         tags: ["React", "Next.js", "Firebase", "Analytics"],
         image: "/testsitepic.png",
         color: "blue",
-        gradient: "from-blue-500 to-cyan-600",
+        gradient: "linear-gradient(135deg, #3b82f6 0%, #0891b2 100%)",
     },
 ];
-
-const colorMap: { [key: string]: { tag: string; darkTag: string } } = {
-    purple: { tag: "bg-emerald-50/80 text-emerald-700 hover:bg-emerald-100", darkTag: "dark:bg-emerald-900/20 dark:text-emerald-300 dark:hover:bg-emerald-900/30" },
-    pink: { tag: "bg-emerald-50/80 text-emerald-700 hover:bg-emerald-100", darkTag: "dark:bg-emerald-900/20 dark:text-emerald-300 dark:hover:bg-emerald-900/30" },
-    blue: { tag: "bg-emerald-50/80 text-emerald-700 hover:bg-emerald-100", darkTag: "dark:bg-emerald-900/20 dark:text-emerald-300 dark:hover:bg-emerald-900/30" },
-};
 
 function TiltCard({ children, className }: { children: React.ReactNode; className?: string }) {
     const ref = useRef<HTMLDivElement>(null);
@@ -73,17 +77,15 @@ function TiltCard({ children, className }: { children: React.ReactNode; classNam
         const xPct = mouseX / width - 0.5;
         const yPct = mouseY / height - 0.5;
 
-        // Guard against undefined .set method
         if (x && typeof x.set === 'function') {
-            x.set(xPct * 0.5); // Reduced intensity
+            x.set(xPct * 0.5);
         }
         if (y && typeof y.set === 'function') {
-            y.set(yPct * 0.5); // Reduced intensity
+            y.set(yPct * 0.5);
         }
     };
 
     const resetPosition = () => {
-        // Guard against undefined .set method
         if (x && typeof x.set === 'function') {
             x.set(0);
         }
@@ -119,7 +121,7 @@ function TiltCard({ children, className }: { children: React.ReactNode; classNam
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
             style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
-            className={`perspective-container ${className}`}
+            className={className}
         >
             {children}
         </motion.div>
@@ -128,114 +130,203 @@ function TiltCard({ children, className }: { children: React.ReactNode; classNam
 
 export default function Projects() {
     return (
-        <section id="projects" className="py-16 sm:py-20 md:py-28 bg-gray-50 dark:bg-gray-900" aria-labelledby="projects-heading">
-            <div className="container mx-auto px-6">
+        <Box
+            component="section"
+            id="projects"
+            sx={{
+                py: { xs: 8, sm: 10, md: 14 },
+                bgcolor: (theme) => theme.palette.mode === "dark" ? "rgba(17, 24, 39, 1)" : "rgba(249, 250, 251, 1)",
+            }}
+            aria-labelledby="projects-heading"
+        >
+            <Container maxWidth="lg">
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6 }}
                     viewport={{ once: true }}
-                    className="max-w-3xl mx-auto text-center mb-16"
+                    style={{ maxWidth: 800, margin: "0 auto", textAlign: "center", marginBottom: 64 }}
                 >
-                    <span className="text-emerald-600 dark:text-emerald-400 font-medium text-sm uppercase tracking-widest mb-4 block">Projects</span>
-                    <h2 id="projects-heading" className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 dark:text-white">
+                    <Typography
+                        variant="overline"
+                        sx={{
+                            color: "primary.main",
+                            fontWeight: 600,
+                            letterSpacing: "0.2em",
+                            mb: 2,
+                            display: "block",
+                        }}
+                    >
+                        Projects
+                    </Typography>
+                    <Typography
+                        variant="h2"
+                        id="projects-heading"
+                        sx={{
+                            fontSize: { xs: "2rem", sm: "2.5rem", md: "3.5rem" },
+                            fontWeight: 700,
+                            color: "text.primary",
+                        }}
+                    >
                         What I&apos;ve Built
-                    </h2>
+                    </Typography>
                 </motion.div>
 
-                <div className="max-w-4xl mx-auto">
-                    <div className="grid md:grid-cols-2 gap-8">
-                        {projects.map((project, index) => {
-                            const colors = colorMap[project.color];
-                            return (
+                <Box sx={{ maxWidth: 900, mx: "auto" }}>
+                    <Grid container spacing={4}>
+                        {projects.map((project, index) => (
+                            <Grid size={{ xs: 12, md: 6 }} key={project.title}>
                                 <motion.article
-                                    key={project.title}
                                     initial={{ opacity: 0, y: 20 }}
                                     whileInView={{ opacity: 1, y: 0 }}
                                     transition={{ duration: 0.5, delay: 0.1 * index }}
                                     viewport={{ once: true }}
                                 >
                                     <TiltCard>
-                                        <a
+                                        <Card
+                                            component={Link}
                                             href={project.liveUrl}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="block group focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-4 rounded-2xl"
-                                            aria-label={`View ${project.title} project`}
+                                            sx={{
+                                                textDecoration: 'none',
+                                                display: 'block',
+                                                borderRadius: 4,
+                                                overflow: 'hidden',
+                                                border: "1px solid",
+                                                borderColor: "divider",
+                                                bgcolor: "background.paper",
+                                                transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                                                height: "100%",
+                                                "&:hover": {
+                                                    borderColor: "primary.light",
+                                                    boxShadow: (theme) => theme.shadows[10],
+                                                    "& .project-image": {
+                                                        transform: "scale(1.05)",
+                                                    },
+                                                    "& .external-link-icon": {
+                                                        opacity: 1,
+                                                        transform: "scale(1.1)",
+                                                    }
+                                                },
+                                            }}
                                         >
-                                            <Card className={`bg-white dark:bg-gray-800 border-gray-100 dark:border-gray-700 hover:border-emerald-200 dark:hover:border-emerald-600 shadow-premium hover-lift transition-premium h-full overflow-hidden`}>
-                                                {/* Project preview header with gradient or image */}
-                                                <div className={`h-40 bg-gradient-to-br ${project.gradient} flex items-center justify-center relative overflow-hidden`}>
-                                                    {project.image ? (
-                                                        <img
-                                                            src={project.image}
-                                                            alt={`${project.title} preview`}
-                                                            className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-110"
-                                                        />
-                                                    ) : (
-                                                        <span className="text-6xl font-bold text-white/20" aria-hidden="true">{project.title.charAt(0)}</span>
-                                                    )}
-                                                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors" aria-hidden="true" />
-                                                    <motion.div
-                                                        className="absolute top-4 right-4"
-                                                        initial={{ opacity: 0, scale: 0.8 }}
-                                                        whileHover={{ scale: 1.1 }}
+                                            <Box sx={{ position: "relative", height: 180, overflow: "hidden" }}>
+                                                {project.image ? (
+                                                    <CardMedia
+                                                        component="img"
+                                                        image={project.image}
+                                                        alt={project.title}
+                                                        className="project-image"
+                                                        sx={{
+                                                            height: "100%",
+                                                            objectFit: "cover",
+                                                            objectPosition: "top",
+                                                            transition: "transform 0.5s ease",
+                                                        }}
+                                                    />
+                                                ) : (
+                                                    <Box
+                                                        sx={{
+                                                            height: "100%",
+                                                            background: project.gradient,
+                                                            display: "flex",
+                                                            alignItems: "center",
+                                                            justifyContent: "center",
+                                                        }}
                                                     >
-                                                        <div className="p-2 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
-                                                            <ExternalLink className="h-4 w-4 text-gray-700 dark:text-gray-300" aria-hidden="true" />
-                                                        </div>
-                                                    </motion.div>
-                                                </div>
-
-                                                <CardContent className="p-6">
-                                                    <h3 className="text-xl font-bold text-gray-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors mb-2">
-                                                        {project.title}
-                                                    </h3>
-
-                                                    <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed mb-4">
-                                                        {project.description}
-                                                    </p>
-
-                                                    <div className="flex flex-wrap gap-1.5 sm:gap-2 overflow-hidden">
-                                                        {project.tags.map((tag) => (
-                                                            <Badge
-                                                                key={tag}
-                                                                variant="secondary"
-                                                                className={`${colors.tag} ${colors.darkTag} border-0 text-xs transition-colors`}
-                                                            >
-                                                                {tag}
-                                                            </Badge>
-                                                        ))}
-                                                    </div>
-                                                </CardContent>
-                                            </Card>
-                                        </a>
+                                                        <Typography variant="h2" sx={{ color: "rgba(255,255,255,0.2)", fontWeight: 800 }}>
+                                                            {project.title.charAt(0)}
+                                                        </Typography>
+                                                    </Box>
+                                                )}
+                                                <Box
+                                                    className="external-link-icon"
+                                                    sx={{
+                                                        position: "absolute",
+                                                        top: 16,
+                                                        right: 16,
+                                                        p: 1,
+                                                        bgcolor: "rgba(255,255,255,0.9)",
+                                                        color: "grey.800",
+                                                        borderRadius: "50%",
+                                                        opacity: 0,
+                                                        transition: "all 0.3s ease",
+                                                        display: "flex",
+                                                        alignItems: "center",
+                                                        justifyContent: "center",
+                                                        boxShadow: 2,
+                                                    }}
+                                                >
+                                                    <ExternalLink size={16} />
+                                                </Box>
+                                            </Box>
+                                            <CardContent sx={{ p: 4 }}>
+                                                <Typography
+                                                    variant="h5"
+                                                    sx={{
+                                                        fontWeight: 700,
+                                                        mb: 2,
+                                                        color: "text.primary",
+                                                        transition: "color 0.3s ease",
+                                                        ".group:hover &": { color: "primary.main" }
+                                                    }}
+                                                >
+                                                    {project.title}
+                                                </Typography>
+                                                <Typography variant="body2" sx={{ color: "text.secondary", lineHeight: 1.7, mb: 3 }}>
+                                                    {project.description}
+                                                </Typography>
+                                                <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
+                                                    {project.tags.map((tag) => (
+                                                        <Chip
+                                                            key={tag}
+                                                            label={tag}
+                                                            size="small"
+                                                            sx={{
+                                                                bgcolor: (theme) => theme.palette.mode === "dark" ? "rgba(16, 185, 129, 0.15)" : "rgba(16, 185, 129, 0.08)",
+                                                                color: "primary.main",
+                                                                fontWeight: 600,
+                                                                borderRadius: 1,
+                                                                fontSize: '0.7rem'
+                                                            }}
+                                                        />
+                                                    ))}
+                                                </Stack>
+                                            </CardContent>
+                                        </Card>
                                     </TiltCard>
                                 </motion.article>
-                            );
-                        })}
-                    </div>
+                            </Grid>
+                        ))}
+                    </Grid>
 
                     <motion.div
                         initial={{ opacity: 0 }}
                         whileInView={{ opacity: 1 }}
                         transition={{ duration: 0.6, delay: 0.3 }}
                         viewport={{ once: true }}
-                        className="text-center mt-12"
                     >
-                        <a
-                            href="https://github.com/eRp289"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-2 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 rounded-lg px-2 py-1"
-                            aria-label="View more projects on GitHub"
-                        >
-                            <Github className="h-5 w-5" aria-hidden="true" />
-                            View more on GitHub
-                        </a>
+                        <Box sx={{ mt: 8, textAlign: "center" }}>
+                            <Button
+                                component={Link}
+                                href="https://github.com/eRp289"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                startIcon={<Github size={20} />}
+                                sx={{
+                                    color: "text.secondary",
+                                    textTransform: "none",
+                                    fontWeight: 600,
+                                    "&:hover": { color: "text.primary", bgcolor: "transparent" },
+                                }}
+                            >
+                                View more on GitHub
+                            </Button>
+                        </Box>
                     </motion.div>
-                </div>
-            </div>
-        </section>
+                </Box>
+            </Container>
+        </Box>
     );
 }

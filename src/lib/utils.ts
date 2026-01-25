@@ -1,8 +1,7 @@
 import { clsx, type ClassValue } from "clsx"
-import { twMerge } from "tailwind-merge"
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+  return clsx(inputs)
 }
 
 // Debounce function to limit how often a function can run

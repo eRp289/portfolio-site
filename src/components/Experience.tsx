@@ -1,8 +1,20 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Badge } from "@/components/ui/badge";
 import { Briefcase } from "lucide-react";
+import Box from "@mui/material/Box";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
+import Chip from "@mui/material/Chip";
+import Timeline from "@mui/lab/Timeline";
+import TimelineItem from "@mui/lab/TimelineItem";
+import TimelineSeparator from "@mui/lab/TimelineSeparator";
+import TimelineConnector from "@mui/lab/TimelineConnector";
+import TimelineContent from "@mui/lab/TimelineContent";
+import TimelineDot from "@mui/lab/TimelineDot";
+import TimelineOppositeContent from "@mui/lab/TimelineOppositeContent";
+import Paper from "@mui/material/Paper";
+import Stack from "@mui/material/Stack";
 
 const experiences = [
     {
@@ -35,91 +47,154 @@ const experiences = [
 
 export default function Experience() {
     return (
-        <section id="experience" className="py-16 sm:py-20 md:py-28 bg-gray-50 dark:bg-gray-900">
-            <div className="container mx-auto px-6">
+        <Box
+            component="section"
+            id="experience"
+            sx={{
+                py: { xs: 8, sm: 10, md: 14 },
+                bgcolor: (theme) => theme.palette.mode === "dark" ? "rgba(17, 24, 39, 0.5)" : "rgba(249, 250, 251, 1)", // gray-900 / gray-50
+            }}
+        >
+            <Container maxWidth="lg">
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6 }}
                     viewport={{ once: true }}
-                    className="max-w-3xl mx-auto text-center mb-16"
+                    style={{ maxWidth: 800, margin: "0 auto", textAlign: "center", marginBottom: 64 }}
                 >
-                    <span className="text-emerald-600 dark:text-emerald-400 font-medium text-sm uppercase tracking-widest mb-4 block">Experience</span>
-                    <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 dark:text-white">
+                    <Typography
+                        variant="overline"
+                        sx={{
+                            color: "primary.main",
+                            fontWeight: 600,
+                            letterSpacing: "0.2em",
+                            mb: 2,
+                            display: "block",
+                        }}
+                    >
+                        Experience
+                    </Typography>
+                    <Typography
+                        variant="h2"
+                        sx={{
+                            fontSize: { xs: "2rem", sm: "2.5rem", md: "3.5rem" },
+                            fontWeight: 700,
+                            color: "text.primary",
+                        }}
+                    >
                         Where I&apos;ve Worked
-                    </h2>
+                    </Typography>
                 </motion.div>
 
-                <div className="max-w-3xl mx-auto">
-                    {experiences.map((exp, index) => (
-                        <motion.div
-                            key={index}
-                            initial={{ opacity: 0, y: 20 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.5, delay: 0.1 * index }}
-                            viewport={{ once: true }}
-                            className="relative pl-8 pb-12 last:pb-0"
-                        >
-                            {/* Timeline line */}
-                            {index !== experiences.length - 1 && (
-                                <div className="absolute left-[11px] top-6 bottom-0 w-px bg-gray-200 dark:bg-gray-700" />
-                            )}
-
-                            {/* Timeline dot */}
-                            <div className={`absolute left-0 top-1.5 w-6 h-6 rounded-full border-4 border-white dark:border-gray-900 shadow-sm ${exp.current ? "bg-emerald-500" : "bg-gray-300 dark:bg-gray-600"
-                                }`} />
-
-                            <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-lg hover:border-gray-200 dark:hover:border-gray-600 transition-all duration-300">
-                                <div className="flex flex-wrap items-center gap-3 mb-3">
-                                    <span className={`text-sm font-medium px-3 py-1 rounded-full ${exp.current
-                                        ? "bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400"
-                                        : "bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400"
-                                        }`}>
-                                        {exp.period}
-                                    </span>
-                                    {exp.current && (
-                                        <span className="text-xs font-medium text-emerald-600 flex items-center gap-1">
-                                            <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
-                                            Current
-                                        </span>
-                                    )}
-                                </div>
-
-                                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-1">
-                                    {exp.title}
-                                </h3>
-
-                                <p className="text-gray-500 dark:text-gray-400 text-sm mb-4 flex items-center gap-1">
-                                    <Briefcase className="h-3.5 w-3.5" />
-                                    {exp.company}
-                                </p>
-
-                                {exp.note && (
-                                    <p className="text-emerald-600 dark:text-emerald-400 text-xs mb-3 italic">
-                                        {exp.note}
-                                    </p>
-                                )}
-
-                                <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed mb-4">
-                                    {exp.description}
-                                </p>
-
-                                <div className="flex flex-wrap gap-2">
-                                    {exp.tags.map((tag) => (
-                                        <Badge
-                                            key={tag}
-                                            variant="secondary"
-                                            className="bg-gray-100 text-gray-600 hover:bg-gray-200 border-0 text-xs"
+                <Box sx={{ maxWidth: 900, mx: "auto" }}>
+                    <Timeline position="right" sx={{ p: 0 }}>
+                        {experiences.map((exp, index) => (
+                            <TimelineItem key={index} sx={{ minHeight: 120 }}>
+                                <TimelineOppositeContent
+                                    sx={{
+                                        display: { xs: "none", sm: "block" },
+                                        color: "text.secondary",
+                                        fontWeight: 500,
+                                        pt: 2.5,
+                                    }}
+                                >
+                                    {exp.period}
+                                </TimelineOppositeContent>
+                                <TimelineSeparator>
+                                    <TimelineDot
+                                        color={exp.current ? "primary" : "grey"}
+                                        sx={{
+                                            boxShadow: exp.current ? (theme) => `0 0 10px ${theme.palette.primary.main}` : "none",
+                                            width: 14,
+                                            height: 14,
+                                        }}
+                                    />
+                                    {index !== experiences.length - 1 && <TimelineConnector />}
+                                </TimelineSeparator>
+                                <TimelineContent sx={{ py: "12px", px: 2 }}>
+                                    <motion.div
+                                        initial={{ opacity: 0, x: 20 }}
+                                        whileInView={{ opacity: 1, x: 0 }}
+                                        transition={{ duration: 0.5, delay: 0.1 * index }}
+                                        viewport={{ once: true }}
+                                    >
+                                        <Paper
+                                            elevation={0}
+                                            sx={{
+                                                p: 3,
+                                                borderRadius: 4,
+                                                bgcolor: "background.paper",
+                                                border: "1px solid",
+                                                borderColor: "divider",
+                                                transition: "all 0.3s ease",
+                                                "&:hover": {
+                                                    borderColor: "primary.light",
+                                                    boxShadow: (theme) => theme.shadows[4],
+                                                },
+                                            }}
                                         >
-                                            {tag}
-                                        </Badge>
-                                    ))}
-                                </div>
-                            </div>
-                        </motion.div>
-                    ))}
-                </div>
-            </div>
-        </section>
+                                            <Stack direction="row" alignItems="center" spacing={1} mb={1}>
+                                                <Typography variant="h6" sx={{ fontWeight: 700 }}>
+                                                    {exp.title}
+                                                </Typography>
+                                                {exp.current && (
+                                                    <Chip
+                                                        label="Current"
+                                                        size="small"
+                                                        color="primary"
+                                                        variant="outlined"
+                                                        sx={{ height: 20, fontSize: '0.65rem', fontWeight: 700 }}
+                                                    />
+                                                )}
+                                            </Stack>
+
+                                            <Typography
+                                                variant="subtitle2"
+                                                sx={{
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    gap: 1,
+                                                    color: 'text.secondary',
+                                                    mb: 2,
+                                                }}
+                                            >
+                                                <Briefcase size={14} />
+                                                {exp.company}
+                                            </Typography>
+
+                                            {exp.note && (
+                                                <Typography variant="caption" sx={{ display: 'block', color: 'primary.main', mb: 1, fontStyle: 'italic' }}>
+                                                    {exp.note}
+                                                </Typography>
+                                            )}
+
+                                            <Typography variant="body2" sx={{ color: "text.secondary", lineHeight: 1.7, mb: 3 }}>
+                                                {exp.description}
+                                            </Typography>
+
+                                            <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
+                                                {exp.tags.map((tag) => (
+                                                    <Chip
+                                                        key={tag}
+                                                        label={tag}
+                                                        size="small"
+                                                        sx={{
+                                                            bgcolor: (theme) => theme.palette.mode === "dark" ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)",
+                                                            fontSize: '0.75rem',
+                                                            borderRadius: 1,
+                                                        }}
+                                                    />
+                                                ))}
+                                            </Stack>
+                                        </Paper>
+                                    </motion.div>
+                                </TimelineContent>
+                            </TimelineItem>
+                        ))}
+                    </Timeline>
+                </Box>
+            </Container>
+        </Box>
     );
 }

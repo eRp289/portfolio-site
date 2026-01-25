@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { ParticleBackground } from "@/components/ParticleBackground";
+import MUIProvider from "@/components/MUIProvider";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -328,15 +329,10 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange={false}
         >
-          {/* Skip to main content link for accessibility */}
-          <a
-            href="#main-content"
-            className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-emerald-600 focus:text-white focus:rounded-lg focus:outline-none"
-          >
-            Skip to main content
-          </a>
-          <ParticleBackground />
-          {children}
+          <MUIProvider>
+            <ParticleBackground />
+            {children}
+          </MUIProvider>
         </ThemeProvider>
       </body>
     </html>

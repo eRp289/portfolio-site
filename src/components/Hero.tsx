@@ -1,11 +1,18 @@
 "use client";
 
-import { motion, useScroll, useTransform, MotionValue } from "framer-motion";
-import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
 import { Mail, Linkedin, Github, ChevronRight } from "lucide-react";
 import Image from "next/image";
 import { useRef, useEffect, useState } from "react";
 import { debounce } from "@/lib/utils";
+import Box from "@mui/material/Box";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
+import Link from "@mui/material/Link";
+import Stack from "@mui/material/Stack";
+import { useTheme } from "@mui/material/styles";
 
 const socialLinks = [
   { icon: Mail, href: "mailto:yehuda@ypinchuck.com", label: "Send email to Yehuda", external: false },
@@ -14,12 +21,12 @@ const socialLinks = [
 ] as const;
 
 export default function Hero() {
+  const muiTheme = useTheme();
   const containerRef = useRef<HTMLElement>(null);
   const [isMobile, setIsMobile] = useState(false);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
 
   useEffect(() => {
-    // Check for reduced motion preference
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     setPrefersReducedMotion(mediaQuery.matches);
 
@@ -35,57 +42,77 @@ export default function Hero() {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
     checkMobile();
 
-    // Debounced resize handler to prevent excessive re-renders
     const debouncedResize = debounce(checkMobile, 300);
     window.addEventListener("resize", debouncedResize);
 
     return () => window.removeEventListener("resize", debouncedResize);
   }, []);
 
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end start"],
-  });
-
-  // Create transforms at the top level (not inside useMemo)
-  const backgroundYTransform = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
-  const textYTransform = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
-  const opacityTransform = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
-
-  // Static transforms for mobile/reduced motion
-  const staticTransformY = useTransform(() => "0%");
-  const staticTransformOpacity = useTransform(() => 1);
-
-  // Choose which transforms to use based on conditions
-  const backgroundY = (isMobile || prefersReducedMotion) ? staticTransformY : backgroundYTransform;
-  const textY = (isMobile || prefersReducedMotion) ? staticTransformY : textYTransform;
-  const opacity = (isMobile || prefersReducedMotion) ? staticTransformOpacity : opacityTransform;
+  // Removed scroll-based parallax effects to keep content visible on all screens
 
   return (
-    <section
+    <Box
+      component="section"
       ref={containerRef}
       id="home"
-      className="relative min-h-screen flex items-center justify-center overflow-hidden"
+      sx={{
+        position: "relative",
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        overflow: "hidden",
+        pt: { xs: 10, sm: 12 },
+      }}
       aria-label="Introduction"
     >
-      {/* Clean gradient background with subtle radial overlay */}
+      {/* Background with animation */}
       <motion.div
-        className="absolute inset-0 bg-gradient-to-br from-gray-50 via-white to-emerald-50 dark:from-gray-950 dark:via-gray-900 dark:to-emerald-950/50 animate-gradient"
         style={{
-          y: backgroundY,
-          willChange: 'transform'
+          position: "absolute",
+          inset: 0,
+          zIndex: -1,
         }}
-        aria-hidden="true"
+        className="animate-gradient"
+      >
+        <Box
+          sx={{
+            width: "100%",
+            height: "100%",
+            background: (theme) =>
+              theme.palette.mode === "dark"
+                ? "linear-gradient(135deg, #0a192f 0%, #020617 50%, #064e3b 100%)"
+                : "linear-gradient(135deg, #f9fafb 0%, #ffffff 50%, #ecfdf5 100%)",
+          }}
+        />
+      </motion.div>
+
+      {/* Subtle radial overlay */}
+      <Box
+        sx={{
+          position: "absolute",
+          inset: 0,
+          pointerEvents: "none",
+          background: (theme) =>
+            theme.palette.mode === "dark"
+              ? "radial-gradient(ellipse 80% 50% at 50% -10%, rgba(16,185,129,0.12), transparent)"
+              : "radial-gradient(ellipse 80% 50% at 50% -10%, rgba(16,185,129,0.08), transparent)",
+        }}
       />
 
-      {/* Subtle radial overlay for depth */}
-      <div className="absolute inset-0" aria-hidden="true">
-        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_80%_50%_at_50%_-10%,rgba(16,185,129,0.08),transparent)] dark:bg-[radial-gradient(ellipse_80%_50%_at_50%_-10%,rgba(16,185,129,0.12),transparent)]" />
-      </div>
-
-      {/* Visible floating orbs for visual interest */}
+      {/* Floating orbs */}
       <motion.div
-        className="absolute top-20 right-1/4 w-64 h-64 bg-emerald-400/30 dark:bg-emerald-500/20 rounded-full blur-2xl"
+        style={{
+          position: "absolute",
+          top: "20%",
+          right: "25%",
+          width: 256,
+          height: 256,
+          borderRadius: "50%",
+          background: muiTheme.palette.mode === "dark" ? "rgba(16, 185, 129, 0.2)" : "rgba(52, 211, 153, 0.3)",
+          filter: "blur(64px)",
+          zIndex: 0,
+        }}
         animate={{
           scale: [1, 1.15, 1],
           opacity: [0.4, 0.6, 0.4],
@@ -93,10 +120,19 @@ export default function Hero() {
           y: [0, -20, 0]
         }}
         transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-        aria-hidden="true"
       />
       <motion.div
-        className="absolute bottom-32 left-1/5 w-72 h-72 bg-emerald-300/25 dark:bg-emerald-400/15 rounded-full blur-2xl"
+        style={{
+          position: "absolute",
+          bottom: "32%",
+          left: "20%",
+          width: 288,
+          height: 288,
+          borderRadius: "50%",
+          background: muiTheme.palette.mode === "dark" ? "rgba(16, 185, 129, 0.15)" : "rgba(110, 231, 183, 0.25)",
+          filter: "blur(64px)",
+          zIndex: 0,
+        }}
         animate={{
           scale: [1, 1.2, 1],
           opacity: [0.35, 0.55, 0.35],
@@ -104,156 +140,271 @@ export default function Hero() {
           y: [0, 25, 0]
         }}
         transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-        aria-hidden="true"
       />
 
       <motion.div
-        className="relative z-10 container mx-auto px-6"
         style={{
-          y: textY,
-          opacity,
-          willChange: 'transform, opacity'
+          position: "relative",
+          zIndex: 10,
         }}
       >
-        <div className="flex flex-col lg:flex-row items-center justify-center gap-12 lg:gap-20">
-          {/* Avatar with refined presentation */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, delay: 0.2, type: "spring", stiffness: 100 }}
-            className="relative"
+        <Container maxWidth="lg">
+          <Stack
+            direction={{ xs: "column", lg: "row" }}
+            spacing={{ xs: 6, lg: 10 }}
+            alignItems="center"
+            justifyContent="center"
           >
-            <div className="relative w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 lg:w-56 lg:h-56">
-              {/* Refined glow effect */}
-              <motion.div
-                className="absolute inset-0 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-full blur-3xl opacity-20 dark:opacity-25"
-                animate={{ scale: [1, 1.05, 1], opacity: [0.2, 0.25, 0.2] }}
-                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                aria-hidden="true"
-              />
-              <div className="relative w-full h-full rounded-full overflow-hidden shadow-premium-xl border-4 border-white/80 dark:border-gray-800/80">
-                <Image
-                  src="/images/profile.jpg"
-                  alt="Yehuda Pinchuck - Professional headshot"
-                  fill
-                  className="object-cover"
-                  priority
-                  sizes="(max-width: 768px) 192px, (max-width: 1024px) 224px, 256px"
+            {/* Avatar */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6, delay: 0.2, type: "spring", stiffness: 100 }}
+              style={{ position: "relative" }}
+            >
+              <Box
+                sx={{
+                  position: "relative",
+                  width: { xs: 128, sm: 160, md: 192, lg: 224 },
+                  height: { xs: 128, sm: 160, md: 192, lg: 224 },
+                }}
+              >
+                <motion.div
+                  style={{
+                    position: "absolute",
+                    inset: 0,
+                    borderRadius: "50%",
+                    background: "linear-gradient(to bottom right, #34d399, #059669)",
+                    filter: "blur(48px)",
+                    opacity: 0.2,
+                  }}
+                  animate={{ scale: [1, 1.05, 1], opacity: [0.2, 0.25, 0.2] }}
+                  transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
                 />
-              </div>
-              {/* Refined wave badge */}
-              <motion.div
-                className="absolute -bottom-2 -right-2 w-12 h-12 bg-emerald-500 rounded-full flex items-center justify-center shadow-premium-lg"
-                animate={{ rotate: [0, 10, -10, 0] }}
-                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                aria-hidden="true"
-              >
-                <span className="text-white text-xl">👋</span>
-              </motion.div>
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="text-center lg:text-left"
-          >
-            <motion.h1
-              className="text-4xl sm:text-5xl md:text-7xl font-bold text-gray-900 dark:text-white mb-4 tracking-tight"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-            >
-              Yehuda
-              <span className="block text-emerald-600 dark:text-emerald-400">Pinchuck</span>
-            </motion.h1>
-
-            <motion.div
-              className="flex items-center justify-center lg:justify-start gap-3 mb-6"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
-            >
-              <motion.span
-                className="h-px w-8 bg-gradient-to-r from-transparent via-emerald-500 to-transparent"
-                initial={{ scaleX: 0 }}
-                animate={{ scaleX: 1 }}
-                transition={{ delay: 0.7, duration: 0.8 }}
-                aria-hidden="true"
-              />
-              <p className="text-base md:text-lg text-gray-500 dark:text-gray-400 font-medium tracking-wide uppercase">
-                Tech • Innovation • AI
-              </p>
-              <motion.span
-                className="h-px w-8 bg-gradient-to-r from-transparent via-emerald-500 to-transparent"
-                initial={{ scaleX: 0 }}
-                animate={{ scaleX: 1 }}
-                transition={{ delay: 0.7, duration: 0.8 }}
-                aria-hidden="true"
-              />
-            </motion.div>
-
-            <motion.p
-              className="text-gray-600 dark:text-gray-400 mb-10 max-w-md leading-relaxed"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.6 }}
-            >
-              Building secure, innovative solutions at the intersection of
-              technology and law enforcement.
-            </motion.p>
-
-            <motion.div
-              className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start items-center"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.7 }}
-            >
-              <Button
-                size="lg"
-                className="bg-gray-900 dark:bg-white hover:bg-gray-800 dark:hover:bg-gray-100 text-white dark:text-gray-900 px-8 py-6 text-base font-medium rounded-full shadow-premium-lg hover-lift group focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:ring-offset-2 transition-premium"
-                onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
-              >
-                Get in Touch
-                <ChevronRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
-              </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                className="glass border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200 hover:border-gray-300 dark:hover:border-gray-600 px-8 py-6 text-base font-medium rounded-full hover-lift-sm transition-premium focus:ring-2 focus:ring-gray-400 dark:focus:ring-gray-500 focus:ring-offset-2"
-                onClick={() => document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" })}
-              >
-                View Projects
-              </Button>
-            </motion.div>
-
-            <motion.nav
-              className="flex gap-4 justify-center lg:justify-start mt-10"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.9 }}
-              aria-label="Social media links"
-            >
-              {socialLinks.map(({ icon: Icon, href, label, external }) => (
-                <motion.a
-                  key={label}
-                  href={href}
-                  target={external ? "_blank" : undefined}
-                  rel={external ? "noopener noreferrer" : undefined}
-                  className="p-3 glass rounded-xl text-gray-500 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 shadow-premium hover-lift-sm transition-premium focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  aria-label={label}
+                <Box
+                  sx={{
+                    position: "relative",
+                    width: "100%",
+                    height: "100%",
+                    borderRadius: "50%",
+                    overflow: "hidden",
+                    border: "4px solid",
+                    borderColor: muiTheme.palette.mode === "dark" ? "rgba(31, 41, 55, 0.8)" : "rgba(255, 255, 255, 0.8)",
+                    boxShadow: (theme) => theme.shadows[10],
+                  }}
                 >
-                  <Icon className="h-5 w-5" aria-hidden="true" />
-                </motion.a>
-              ))}
-            </motion.nav>
-          </motion.div>
-        </div>
+                  <Image
+                    src="/images/profile.jpg"
+                    alt="Yehuda Pinchuck"
+                    fill
+                    style={{ objectFit: 'cover' }}
+                    priority
+                  />
+                </Box>
+                <motion.div
+                  style={{
+                    position: "absolute",
+                    bottom: -8,
+                    right: -8,
+                    width: 48,
+                    height: 48,
+                    background: "#10b981",
+                    borderRadius: "50%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    boxShadow: muiTheme.shadows[4],
+                  }}
+                  animate={{ rotate: [0, 10, -10, 0] }}
+                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                >
+                  <span style={{ fontSize: "1.25rem" }}>👋</span>
+                </motion.div>
+              </Box>
+            </motion.div>
 
+            {/* Content */}
+            <Box sx={{ textAlign: { xs: "center", lg: "left" } }}>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+              >
+                <Typography
+                  variant="h1"
+                  sx={{
+                    fontSize: { xs: "2.5rem", sm: "3.5rem", md: "4.5rem" },
+                    fontWeight: 700,
+                    mb: 1,
+                  }}
+                >
+                  Yehuda
+                  <Typography
+                    component="span"
+                    variant="inherit"
+                    sx={{
+                      display: "block",
+                      color: "primary.main",
+                    }}
+                  >
+                    Pinchuck
+                  </Typography>
+                </Typography>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 }}
+              >
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: { xs: "center", lg: "flex-start" },
+                    gap: 2,
+                    mb: 3,
+                  }}
+                >
+                  <Box sx={{ height: 1, width: 32, background: "linear-gradient(to right, transparent, #10b981, transparent)" }} />
+                  <Typography
+                    variant="overline"
+                    sx={{
+                      fontSize: "0.875rem",
+                      fontWeight: 500,
+                      color: "text.secondary",
+                      letterSpacing: "0.1em",
+                    }}
+                  >
+                    Tech • Innovation • AI
+                  </Typography>
+                  <Box sx={{ height: 1, width: 32, background: "linear-gradient(to right, transparent, #10b981, transparent)" }} />
+                </Box>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.6 }}
+              >
+                <Typography
+                  variant="body1"
+                  sx={{
+                    color: "text.secondary",
+                    mb: 5,
+                    maxWidth: 400,
+                    mx: { xs: "auto", lg: 0 },
+                  }}
+                >
+                  Building secure, innovative solutions at the intersection of
+                  technology and law enforcement.
+                </Typography>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.7 }}
+              >
+                <Stack
+                  direction={{ xs: "column", sm: "row" }}
+                  spacing={2}
+                  justifyContent={{ xs: "center", lg: "flex-start" }}
+                  alignItems="center"
+                >
+                  <Button
+                    variant="contained"
+                    size="large"
+                    onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
+                    endIcon={<ChevronRight />}
+                    sx={{
+                      borderRadius: 10,
+                      px: 4,
+                      py: 1.5,
+                      bgcolor: (theme) => theme.palette.mode === "dark" ? "#fff" : "#111827",
+                      color: (theme) => theme.palette.mode === "dark" ? "#111827" : "#fff",
+                      "&:hover": {
+                        bgcolor: (theme) => theme.palette.mode === "dark" ? "#f3f4f6" : "#1f2937",
+                        transform: "translateY(-2px)",
+                      },
+                      transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                      textTransform: "none",
+                      fontSize: "1rem",
+                    }}
+                  >
+                    Get in Touch
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    size="large"
+                    onClick={() => document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" })}
+                    sx={{
+                      borderRadius: 10,
+                      px: 4,
+                      py: 1.5,
+                      borderColor: "divider",
+                      color: "text.primary",
+                      backdropFilter: "blur(8px)",
+                      bgcolor: "rgba(255, 255, 255, 0.05)",
+                      "&:hover": {
+                        borderColor: "text.primary",
+                        bgcolor: "rgba(255, 255, 255, 0.1)",
+                        transform: "translateY(-1px)",
+                      },
+                      transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                      textTransform: "none",
+                      fontSize: "1rem",
+                    }}
+                  >
+                    View Projects
+                  </Button>
+                </Stack>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.9 }}
+              >
+                <Stack
+                  direction="row"
+                  spacing={1.5}
+                  justifyContent={{ xs: "center", lg: "flex-start" }}
+                  mt={5}
+                >
+                  {socialLinks.map(({ icon: Icon, href, label, external }) => (
+                    <motion.div key={label} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                      <IconButton
+                        component={Link}
+                        href={href}
+                        target={external ? "_blank" : undefined}
+                        rel={external ? "noopener noreferrer" : undefined}
+                        aria-label={label}
+                        sx={{
+                          p: 1.5,
+                          borderRadius: 3,
+                          border: "1px solid",
+                          borderColor: "divider",
+                          backdropFilter: "blur(8px)",
+                          bgcolor: "rgba(255, 255, 255, 0.05)",
+                          color: "text.secondary",
+                          "&:hover": {
+                            color: "primary.main",
+                            bgcolor: "rgba(255, 255, 255, 0.1)",
+                          },
+                          transition: "all 0.3s ease",
+                        }}
+                      >
+                        <Icon size={20} />
+                      </IconButton>
+                    </motion.div>
+                  ))}
+                </Stack>
+              </motion.div>
+            </Box>
+          </Stack>
+        </Container>
       </motion.div>
-    </section>
+    </Box>
   );
 }

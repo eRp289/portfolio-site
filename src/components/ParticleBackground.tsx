@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import Box from "@mui/material/Box";
 
 interface Particle {
     id: number;
@@ -24,7 +25,6 @@ export function ParticleBackground() {
     }, []);
 
     useEffect(() => {
-        // Fewer particles on mobile for performance
         const count = isMobile ? 15 : 30;
         const newParticles: Particle[] = [];
 
@@ -42,12 +42,23 @@ export function ParticleBackground() {
     }, [isMobile]);
 
     return (
-        <div className="fixed inset-0 pointer-events-none overflow-hidden z-0" aria-hidden="true">
+        <Box
+            sx={{
+                position: "fixed",
+                inset: 0,
+                pointerEvents: "none",
+                overflow: "hidden",
+                zIndex: 0,
+            }}
+            aria-hidden="true"
+        >
             {particles.map((particle) => (
                 <motion.div
                     key={particle.id}
-                    className="absolute rounded-full bg-emerald-500/20 dark:bg-emerald-400/30"
                     style={{
+                        position: "absolute",
+                        borderRadius: "50%",
+                        backgroundColor: "rgba(16, 185, 129, 0.2)",
                         left: `${particle.x}%`,
                         top: `${particle.y}%`,
                         width: particle.size,
@@ -67,6 +78,6 @@ export function ParticleBackground() {
                     }}
                 />
             ))}
-        </div>
+        </Box>
     );
 }

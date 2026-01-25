@@ -1,31 +1,62 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Box from "@mui/material/Box";
+import Container from "@mui/material/Container";
+import Paper from "@mui/material/Paper";
+import Typography from "@mui/material/Typography";
 
 export default function AvailableBanner() {
     return (
-        <section className="py-8 bg-white dark:bg-gray-950 border-y border-gray-100 dark:border-gray-800">
-            <div className="container mx-auto px-6">
+        <Box
+            component="section"
+            sx={{
+                py: 4,
+                bgcolor: "background.default",
+                borderY: "1px solid",
+                borderColor: "divider",
+            }}
+        >
+            <Container maxWidth="lg">
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6 }}
                     viewport={{ once: true }}
-                    className="flex justify-center"
+                    style={{ display: "flex", justifyContent: "center" }}
                 >
-                    <div className="inline-flex items-center gap-2 px-6 py-3 glass rounded-full shadow-premium">
+                    <Paper
+                        elevation={0}
+                        sx={{
+                            display: "inline-flex",
+                            alignItems: "center",
+                            gap: 1.5,
+                            px: 3,
+                            py: 1.5,
+                            borderRadius: "100px",
+                            border: "1px solid",
+                            borderColor: "divider",
+                            bgcolor: "background.paper",
+                            boxShadow: (theme) => theme.shadows[1],
+                        }}
+                    >
                         <motion.span
-                            className="w-2.5 h-2.5 bg-emerald-500 rounded-full"
+                            style={{
+                                width: 10,
+                                height: 10,
+                                backgroundColor: "#10b981",
+                                borderRadius: "50%",
+                            }}
                             animate={{ scale: [1, 1.2, 1], opacity: [1, 0.7, 1] }}
                             transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
                             aria-hidden="true"
                         />
-                        <span className="text-gray-700 dark:text-gray-300 text-base font-medium">
+                        <Typography variant="body2" sx={{ fontWeight: 600, color: "text.primary" }}>
                             Available for opportunities
-                        </span>
-                    </div>
+                        </Typography>
+                    </Paper>
                 </motion.div>
-            </div>
-        </section>
+            </Container>
+        </Box>
     );
 }

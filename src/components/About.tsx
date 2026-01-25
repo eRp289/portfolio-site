@@ -1,8 +1,13 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Card, CardContent } from "@/components/ui/card";
 import { Target, Briefcase, Shield, ArrowUpRight } from "lucide-react";
+import Box from "@mui/material/Box";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import Grid from "@mui/material/Grid";
 
 const highlights = [
     {
@@ -22,60 +27,128 @@ const highlights = [
     },
 ];
 
-
 export default function About() {
     return (
-        <section id="about" className="py-16 sm:py-20 md:py-28 bg-white dark:bg-gray-950">
-            <div className="container mx-auto px-6">
+        <Box
+            component="section"
+            id="about"
+            sx={{
+                py: { xs: 8, sm: 10, md: 14 },
+                bgcolor: "background.default",
+            }}
+        >
+            <Container maxWidth="lg">
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6 }}
                     viewport={{ once: true }}
-                    className="max-w-3xl mx-auto text-center mb-20"
+                    style={{ maxWidth: 800, margin: "0 auto", textAlign: "center", marginBottom: 80 }}
                 >
-                    <span className="text-emerald-600 font-medium text-sm uppercase tracking-widest mb-4 block">About</span>
-                    <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-6">
+                    <Typography
+                        variant="overline"
+                        sx={{
+                            color: "primary.main",
+                            fontWeight: 600,
+                            letterSpacing: "0.2em",
+                            mb: 2,
+                            display: "block",
+                        }}
+                    >
+                        About
+                    </Typography>
+                    <Typography
+                        variant="h2"
+                        sx={{
+                            fontSize: { xs: "1.75rem", sm: "2.25rem", md: "3rem" },
+                            fontWeight: 700,
+                            mb: 3,
+                            color: "text.primary",
+                        }}
+                    >
                         Bridging Technology & Innovation
-                    </h2>
-                    <p className="text-gray-600 dark:text-gray-400 text-lg leading-relaxed">
+                    </Typography>
+                    <Typography
+                        variant="body1"
+                        sx={{
+                            color: "text.secondary",
+                            fontSize: "1.125rem",
+                            lineHeight: 1.8,
+                        }}
+                    >
                         Motivated and detail-oriented tech professional with hands-on
                         experience in police IT systems, instructional support, and
                         innovative technology solutions. Passionate about applying technical and
                         analytical skills to solve real-world challenges.
-                    </p>
+                    </Typography>
                 </motion.div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-                    {highlights.map((item, index) => {
-                        return (
+                <Grid container spacing={3} justifyContent="center" sx={{ maxWidth: 1024, mx: "auto" }}>
+                    {highlights.map((item, index) => (
+                        <Grid size={{ xs: 12, md: 4 }} key={item.title}>
                             <motion.div
-                                key={item.title}
                                 initial={{ opacity: 0, y: 20 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.5, delay: 0.1 * index, type: "spring", stiffness: 100 }}
                                 viewport={{ once: true }}
-                                className="group"
+                                style={{ height: "100%" }}
                             >
-                                <Card className={`bg-white dark:bg-gray-800/50 border-gray-100 dark:border-gray-700 hover:border-emerald-200 dark:hover:border-emerald-600 shadow-premium hover-lift transition-premium h-full cursor-pointer`}>
-                                    <CardContent className="p-6">
-                                        <div className="inline-flex p-3.5 bg-emerald-50 dark:bg-emerald-900/20 rounded-xl mb-4 group-hover:bg-emerald-100 dark:group-hover:bg-emerald-900/30 transition-colors">
-                                            <item.icon className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
-                                        </div>
-                                        <div className="flex items-start justify-between">
-                                            <div>
-                                                <h4 className="text-gray-900 dark:text-white font-semibold mb-2">{item.title}</h4>
-                                                <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">{item.description}</p>
-                                            </div>
-                                            <ArrowUpRight className="h-4 w-4 text-gray-300 dark:text-gray-600 group-hover:text-emerald-500 dark:group-hover:text-emerald-400 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-300" />
-                                        </div>
+                                <Card
+                                    sx={{
+                                        height: "100%",
+                                        cursor: "pointer",
+                                        bgcolor: (theme) => theme.palette.mode === "dark" ? "rgba(31, 41, 55, 0.5)" : "background.paper",
+                                        borderColor: "divider",
+                                        borderWidth: 1,
+                                        borderStyle: "solid",
+                                        transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                                        "&:hover": {
+                                            transform: "translateY(-4px)",
+                                            borderColor: "primary.light",
+                                            boxShadow: (theme) => theme.shadows[4],
+                                            "& .arrow-icon": {
+                                                transform: "translate(2px, -2px)",
+                                                color: "primary.main",
+                                            },
+                                        },
+                                    }}
+                                >
+                                    <CardContent sx={{ p: 4 }}>
+                                        <Box
+                                            sx={{
+                                                display: "inline-flex",
+                                                p: 1.5,
+                                                borderRadius: 3,
+                                                bgcolor: "primary.light",
+                                                opacity: 0.8,
+                                                mb: 3,
+                                                color: "primary.main",
+                                            }}
+                                        >
+                                            <item.icon size={24} />
+                                        </Box>
+                                        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+                                            <Box>
+                                                <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>
+                                                    {item.title}
+                                                </Typography>
+                                                <Typography variant="body2" sx={{ color: "text.secondary", lineHeight: 1.6 }}>
+                                                    {item.description}
+                                                </Typography>
+                                            </Box>
+                                            <ArrowUpRight
+                                                className="arrow-icon"
+                                                size={18}
+                                                style={{ color: "#94a3b8", transition: "all 0.3s ease" }}
+                                            />
+                                        </Box>
                                     </CardContent>
                                 </Card>
                             </motion.div>
-                        );
-                    })}
-                </div>
-            </div>
-        </section>
+                        </Grid>
+                    ))}
+                </Grid>
+            </Container>
+        </Box>
     );
 }

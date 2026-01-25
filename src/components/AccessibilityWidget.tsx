@@ -2,7 +2,16 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Button } from "@/components/ui/button";
+import Box from "@mui/material/Box";
+import Fab from "@mui/material/Fab";
+import Paper from "@mui/material/Paper";
+import Typography from "@mui/material/Typography";
+import IconButton from "@mui/material/IconButton";
+import Button from "@mui/material/Button";
+import Stack from "@mui/material/Stack";
+import Switch from "@mui/material/Switch";
+import Divider from "@mui/material/Divider";
+import Backdrop from "@mui/material/Backdrop";
 import {
     Accessibility,
     X,
@@ -12,8 +21,7 @@ import {
     MousePointer2,
     Pause,
     RotateCcw,
-    Type,
-    LucideIcon
+    Type
 } from "lucide-react";
 
 interface AccessibilityState {
@@ -47,47 +55,26 @@ export default function AccessibilityWidget() {
         return defaultState;
     });
 
-    // Apply settings to document
     const applySettings = useCallback((newSettings: AccessibilityState) => {
         const html = document.documentElement;
-
-        // Font size
         html.style.fontSize = `${newSettings.fontSize}%`;
 
-        // High contrast
-        if (newSettings.highContrast) {
-            html.classList.add("high-contrast");
-        } else {
-            html.classList.remove("high-contrast");
-        }
+        if (newSettings.highContrast) html.classList.add("high-contrast");
+        else html.classList.remove("high-contrast");
 
-        // Highlight links
-        if (newSettings.highlightLinks) {
-            html.classList.add("highlight-links");
-        } else {
-            html.classList.remove("highlight-links");
-        }
+        if (newSettings.highlightLinks) html.classList.add("highlight-links");
+        else html.classList.remove("highlight-links");
 
-        // Pause animations
-        if (newSettings.pauseAnimations) {
-            html.classList.add("pause-animations");
-        } else {
-            html.classList.remove("pause-animations");
-        }
+        if (newSettings.pauseAnimations) html.classList.add("pause-animations");
+        else html.classList.remove("pause-animations");
 
-        // Large pointer
-        if (newSettings.largePointer) {
-            html.classList.add("large-pointer");
-        } else {
-            html.classList.remove("large-pointer");
-        }
+        if (newSettings.largePointer) html.classList.add("large-pointer");
+        else html.classList.remove("large-pointer");
     }, []);
 
-    // Apply settings on mount
     useEffect(() => {
         applySettings(settings);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [settings, applySettings]);
 
     const updateSetting = useCallback(<K extends keyof AccessibilityState>(
         key: K,
@@ -106,23 +93,16 @@ export default function AccessibilityWidget() {
     }, [applySettings]);
 
     const increaseFontSize = () => {
-        if (settings.fontSize < 150) {
-            updateSetting("fontSize", settings.fontSize + 10);
-        }
+        if (settings.fontSize < 150) updateSetting("fontSize", settings.fontSize + 10);
     };
 
     const decreaseFontSize = () => {
-        if (settings.fontSize > 80) {
-            updateSetting("fontSize", settings.fontSize - 10);
-        }
+        if (settings.fontSize > 80) updateSetting("fontSize", settings.fontSize - 10);
     };
 
-    // Close on Escape
     useEffect(() => {
         const handleEscape = (e: KeyboardEvent) => {
-            if (e.key === "Escape" && isOpen) {
-                setIsOpen(false);
-            }
+            if (e.key === "Escape" && isOpen) setIsOpen(false);
         };
         document.addEventListener("keydown", handleEscape);
         return () => document.removeEventListener("keydown", handleEscape);
@@ -130,136 +110,135 @@ export default function AccessibilityWidget() {
 
     return (
         <>
-            {/* Floating Accessibility Button */}
             <motion.div
-                className="fixed bottom-6 left-6 z-50"
+                style={{ position: "fixed", bottom: 24, left: 24, zIndex: 1200 }}
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ delay: 1, type: "spring" }}
             >
-                <Button
-                    onClick={() => setIsOpen(!isOpen)}
-                    className="w-14 h-14 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-600/30 focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
+                <Fab
+                    color="primary"
                     aria-label="Open accessibility options"
-                    aria-expanded={isOpen}
-                    aria-controls="accessibility-panel"
+                    onClick={() => setIsOpen(!isOpen)}
+                    sx={{
+                        width: 56,
+                        height: 56,
+                        boxShadow: (theme) => theme.shadows[6],
+                    }}
                 >
-                    <Accessibility className="h-6 w-6" aria-hidden="true" />
-                </Button>
+                    <Accessibility size={24} />
+                </Fab>
             </motion.div>
 
-            {/* Accessibility Panel */}
             <AnimatePresence>
                 {isOpen && (
                     <>
-                        {/* Backdrop */}
-                        <motion.div
-                            className="fixed inset-0 bg-black/20 z-40"
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
+                        <Backdrop
+                            open={isOpen}
                             onClick={() => setIsOpen(false)}
-                            aria-hidden="true"
+                            sx={{ zIndex: 1100, bgcolor: "rgba(0,0,0,0.2)" }}
                         />
-
-                        {/* Panel */}
                         <motion.div
-                            id="accessibility-panel"
-                            className="fixed bottom-24 left-6 z-50 w-80 bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden"
                             initial={{ opacity: 0, y: 20, scale: 0.95 }}
                             animate={{ opacity: 1, y: 0, scale: 1 }}
                             exit={{ opacity: 0, y: 20, scale: 0.95 }}
-                            role="dialog"
-                            aria-modal="true"
-                            aria-label="Accessibility options"
+                            style={{
+                                position: "fixed",
+                                bottom: 96,
+                                left: 24,
+                                zIndex: 1200,
+                                width: 320,
+                            }}
                         >
-                            {/* Header */}
-                            <div className="flex items-center justify-between p-4 border-b border-gray-100 bg-gray-50">
-                                <div className="flex items-center gap-2">
-                                    <Accessibility className="h-5 w-5 text-emerald-600" aria-hidden="true" />
-                                    <h2 className="font-semibold text-gray-900">Accessibility</h2>
-                                </div>
-                                <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    onClick={() => setIsOpen(false)}
-                                    className="h-8 w-8 text-gray-500 hover:text-gray-700"
-                                    aria-label="Close accessibility options"
-                                >
-                                    <X className="h-4 w-4" aria-hidden="true" />
-                                </Button>
-                            </div>
+                            <Paper
+                                elevation={12}
+                                sx={{
+                                    borderRadius: 4,
+                                    overflow: "hidden",
+                                    border: "1px solid",
+                                    borderColor: "divider",
+                                }}
+                            >
+                                <Box sx={{ px: 2, py: 1.5, bgcolor: (theme) => theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.02)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                                    <Stack direction="row" spacing={1} alignItems="center">
+                                        <Accessibility size={18} color="#10b981" />
+                                        <Typography variant="subtitle2" sx={{ fontWeight: 800 }}>Accessibility</Typography>
+                                    </Stack>
+                                    <IconButton size="small" onClick={() => setIsOpen(false)}>
+                                        <X size={16} />
+                                    </IconButton>
+                                </Box>
+                                <Divider />
+                                <Box sx={{ p: 2 }}>
+                                    <Stack spacing={3}>
+                                        <Box>
+                                            <Stack direction="row" alignItems="center" justifyContent="space-between" mb={1}>
+                                                <Stack direction="row" spacing={1} alignItems="center">
+                                                    <Type size={16} />
+                                                    <Typography variant="caption" sx={{ fontWeight: 700 }}>Font Size</Typography>
+                                                </Stack>
+                                                <Typography variant="caption" sx={{ color: "primary.main", fontWeight: 700 }}>{settings.fontSize}%</Typography>
+                                            </Stack>
+                                            <Stack direction="row" spacing={1}>
+                                                <Button
+                                                    fullWidth
+                                                    variant="outlined"
+                                                    size="small"
+                                                    onClick={decreaseFontSize}
+                                                    disabled={settings.fontSize <= 80}
+                                                    startIcon={<ZoomOut size={14} />}
+                                                    sx={{ borderRadius: 2 }}
+                                                >
+                                                    Smaller
+                                                </Button>
+                                                <Button
+                                                    fullWidth
+                                                    variant="outlined"
+                                                    size="small"
+                                                    onClick={increaseFontSize}
+                                                    disabled={settings.fontSize >= 150}
+                                                    startIcon={<ZoomIn size={14} />}
+                                                    sx={{ borderRadius: 2 }}
+                                                >
+                                                    Larger
+                                                </Button>
+                                            </Stack>
+                                        </Box>
 
-                            {/* Options */}
-                            <div className="p-4 space-y-4">
-                                {/* Font Size */}
-                                <div>
-                                    <div className="flex items-center justify-between mb-2">
-                                        <span className="text-sm font-medium text-gray-700 flex items-center gap-2">
-                                            <Type className="h-4 w-4" aria-hidden="true" />
-                                            Font Size
-                                        </span>
-                                        <span className="text-sm text-gray-500">{settings.fontSize}%</span>
-                                    </div>
-                                    <div className="flex gap-2">
+                                        <Stack spacing={1}>
+                                            <ToggleItem
+                                                icon={<Contrast size={16} />}
+                                                label="High Contrast"
+                                                checked={settings.highContrast}
+                                                onChange={(v) => updateSetting("highContrast", v)}
+                                            />
+                                            <ToggleItem
+                                                icon={<MousePointer2 size={16} />}
+                                                label="Highlight Links"
+                                                checked={settings.highlightLinks}
+                                                onChange={(v) => updateSetting("highlightLinks", v)}
+                                            />
+                                            <ToggleItem
+                                                icon={<Pause size={16} />}
+                                                label="Pause Animations"
+                                                checked={settings.pauseAnimations}
+                                                onChange={(v) => updateSetting("pauseAnimations", v)}
+                                            />
+                                        </Stack>
+
                                         <Button
-                                            variant="outline"
-                                            size="sm"
-                                            onClick={decreaseFontSize}
-                                            disabled={settings.fontSize <= 80}
-                                            className="flex-1"
-                                            aria-label="Decrease font size"
+                                            fullWidth
+                                            variant="text"
+                                            size="small"
+                                            onClick={resetSettings}
+                                            startIcon={<RotateCcw size={14} />}
+                                            sx={{ color: "text.secondary", mt: 1 }}
                                         >
-                                            <ZoomOut className="h-4 w-4 mr-1" aria-hidden="true" />
-                                            Smaller
+                                            Reset to Default
                                         </Button>
-                                        <Button
-                                            variant="outline"
-                                            size="sm"
-                                            onClick={increaseFontSize}
-                                            disabled={settings.fontSize >= 150}
-                                            className="flex-1"
-                                            aria-label="Increase font size"
-                                        >
-                                            <ZoomIn className="h-4 w-4 mr-1" aria-hidden="true" />
-                                            Larger
-                                        </Button>
-                                    </div>
-                                </div>
-
-                                {/* Toggle Options */}
-                                <div className="space-y-2">
-                                    <ToggleOption
-                                        icon={Contrast}
-                                        label="High Contrast"
-                                        checked={settings.highContrast}
-                                        onChange={(v) => updateSetting("highContrast", v)}
-                                    />
-                                    <ToggleOption
-                                        icon={MousePointer2}
-                                        label="Highlight Links"
-                                        checked={settings.highlightLinks}
-                                        onChange={(v) => updateSetting("highlightLinks", v)}
-                                    />
-                                    <ToggleOption
-                                        icon={Pause}
-                                        label="Pause Animations"
-                                        checked={settings.pauseAnimations}
-                                        onChange={(v) => updateSetting("pauseAnimations", v)}
-                                    />
-                                </div>
-
-                                {/* Reset */}
-                                <Button
-                                    variant="outline"
-                                    onClick={resetSettings}
-                                    className="w-full text-gray-600"
-                                    aria-label="Reset all accessibility settings to default"
-                                >
-                                    <RotateCcw className="h-4 w-4 mr-2" aria-hidden="true" />
-                                    Reset to Default
-                                </Button>
-                            </div>
+                                    </Stack>
+                                </Box>
+                            </Paper>
                         </motion.div>
                     </>
                 )}
@@ -268,43 +247,34 @@ export default function AccessibilityWidget() {
     );
 }
 
-// Toggle Option Component
-function ToggleOption({
-    icon: Icon,
-    label,
-    checked,
-    onChange
-}: {
-    icon: LucideIcon;
-    label: string;
-    checked: boolean;
-    onChange: (value: boolean) => void;
-}) {
+function ToggleItem({ icon, label, checked, onChange }: { icon: React.ReactNode, label: string, checked: boolean, onChange: (v: boolean) => void }) {
     return (
-        <button
-            onClick={() => onChange(!checked)}
-            className={`w-full flex items-center justify-between p-3 rounded-lg border transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 ${checked
-                ? "bg-emerald-50 border-emerald-200 text-emerald-700"
-                : "bg-white border-gray-200 text-gray-700 hover:bg-gray-50"
-                }`}
-            role="switch"
-            aria-checked={checked}
-            aria-label={label}
+        <Stack
+            direction="row"
+            alignItems="center"
+            justifyContent="space-between"
+            sx={{
+                p: 1.5,
+                borderRadius: 2,
+                bgcolor: checked ? "primary.light" : "transparent",
+                border: "1px solid",
+                borderColor: checked ? "primary.main" : "divider",
+                transition: "all 0.2s ease",
+            }}
         >
-            <span className="flex items-center gap-2">
-                <Icon className="h-4 w-4" aria-hidden="true" />
-                <span className="text-sm font-medium">{label}</span>
-            </span>
-            <span
-                className={`w-10 h-6 rounded-full relative transition-colors ${checked ? "bg-emerald-500" : "bg-gray-300"
-                    }`}
-                aria-hidden="true"
-            >
-                <span
-                    className={`absolute top-1 w-4 h-4 rounded-full bg-white shadow transition-transform ${checked ? "left-5" : "left-1"
-                        }`}
-                />
-            </span>
-        </button>
+            <Stack direction="row" spacing={1} alignItems="center">
+                <Box sx={{ color: checked ? "primary.main" : "text.secondary", display: 'flex' }}>{icon}</Box>
+                <Typography variant="caption" sx={{ fontWeight: 600, color: checked ? "primary.main" : "text.primary" }}>{label}</Typography>
+            </Stack>
+            <Switch
+                size="small"
+                checked={checked}
+                onChange={(e) => onChange(e.target.checked)}
+                sx={{
+                    '& .MuiSwitch-switchBase.Mui-checked': { color: '#10b981' },
+                    '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': { backgroundColor: '#10b981' },
+                }}
+            />
+        </Stack>
     );
 }

@@ -1,13 +1,18 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Badge } from "@/components/ui/badge";
 import {
     Code2,
     Database,
     Shield,
     Settings
 } from "lucide-react";
+import Box from "@mui/material/Box";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
+import Chip from "@mui/material/Chip";
+import Grid from "@mui/material/Grid";
+import { useTheme } from "@mui/material/styles";
 
 const skillCategories = [
     {
@@ -32,62 +37,121 @@ const skillCategories = [
     },
 ];
 
-
 export default function Skills() {
+    const muiTheme = useTheme();
+
     return (
-        <section id="skills" className="py-16 sm:py-20 md:py-28 bg-white dark:bg-gray-950">
-            <div className="container mx-auto px-6">
+        <Box
+            component="section"
+            id="skills"
+            sx={{
+                py: { xs: 8, sm: 10, md: 14 },
+                bgcolor: "background.default",
+            }}
+        >
+            <Container maxWidth="lg">
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6 }}
                     viewport={{ once: true }}
-                    className="max-w-3xl mx-auto text-center mb-16"
+                    style={{ maxWidth: 800, margin: "0 auto", textAlign: "center", marginBottom: 64 }}
                 >
-                    <span className="text-emerald-600 dark:text-emerald-400 font-medium text-sm uppercase tracking-widest mb-4 block">Skills</span>
-                    <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 dark:text-white">
+                    <Typography
+                        variant="overline"
+                        sx={{
+                            color: "primary.main",
+                            fontWeight: 600,
+                            letterSpacing: "0.2em",
+                            mb: 2,
+                            display: "block",
+                        }}
+                    >
+                        Skills
+                    </Typography>
+                    <Typography
+                        variant="h2"
+                        sx={{
+                            fontSize: { xs: "2rem", sm: "2.5rem", md: "3.5rem" },
+                            fontWeight: 700,
+                            color: "text.primary",
+                        }}
+                    >
                         What I Work With
-                    </h2>
+                    </Typography>
                 </motion.div>
 
-                <div className="max-w-5xl mx-auto">
-                    <div className="grid md:grid-cols-2 gap-6 lg:gap-8">
-                        {skillCategories.map((category, index) => {
-                            return (
+                <Box sx={{ maxWidth: 1024, mx: "auto" }}>
+                    <Grid container spacing={{ xs: 3, lg: 4 }}>
+                        {skillCategories.map((category, index) => (
+                            <Grid size={{ xs: 12, md: 6 }} key={category.title}>
                                 <motion.div
-                                    key={category.title}
                                     initial={{ opacity: 0, y: 20 }}
                                     whileInView={{ opacity: 1, y: 0 }}
                                     transition={{ duration: 0.5, delay: 0.1 * index, type: "spring", stiffness: 100 }}
                                     viewport={{ once: true }}
-                                    className="bg-white dark:bg-gray-800/50 rounded-2xl p-6 md:p-8 shadow-premium hover-lift transition-premium border border-gray-100 dark:border-gray-700 hover:border-emerald-200 dark:hover:border-emerald-600"
                                 >
-                                    <div className="flex items-center gap-4 mb-6">
-                                        <div className="p-3.5 rounded-xl bg-emerald-50 dark:bg-emerald-900/20">
-                                            <category.icon className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
-                                        </div>
-                                        <h3 className="text-xl font-bold text-gray-900 dark:text-white">
-                                            {category.title}
-                                        </h3>
-                                    </div>
-
-                                    <div className="flex flex-wrap gap-2">
-                                        {category.skills.map((skill) => (
-                                            <Badge
-                                                key={skill}
-                                                variant="secondary"
-                                                className="bg-emerald-50/80 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-900/30 border-0 py-2 px-4 text-sm font-medium transition-premium cursor-default hover-lift-sm"
+                                    <Box
+                                        sx={{
+                                            bgcolor: (theme) => theme.palette.mode === "dark" ? "rgba(31, 41, 55, 0.5)" : "background.paper",
+                                            borderRadius: 4,
+                                            p: { xs: 3, md: 4 },
+                                            boxShadow: (theme) => theme.palette.mode === "dark" ? "none" : theme.shadows[2],
+                                            border: "1px solid",
+                                            borderColor: "divider",
+                                            transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                                            "&:hover": {
+                                                transform: "translateY(-4px)",
+                                                borderColor: "primary.light",
+                                                boxShadow: (theme) => theme.shadows[4],
+                                            },
+                                        }}
+                                    >
+                                        <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 3 }}>
+                                            <Box
+                                                sx={{
+                                                    p: 1.5,
+                                                    borderRadius: 3,
+                                                    bgcolor: "primary.light",
+                                                    opacity: 0.8,
+                                                    color: "primary.main",
+                                                }}
                                             >
-                                                {skill}
-                                            </Badge>
-                                        ))}
-                                    </div>
+                                                <category.icon size={24} />
+                                            </Box>
+                                            <Typography variant="h5" sx={{ fontWeight: 700 }}>
+                                                {category.title}
+                                            </Typography>
+                                        </Box>
+
+                                        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
+                                            {category.skills.map((skill) => (
+                                                <Chip
+                                                    key={skill}
+                                                    label={skill}
+                                                    sx={{
+                                                        bgcolor: (theme) => theme.palette.mode === "dark" ? "rgba(16, 185, 129, 0.15)" : "rgba(16, 185, 129, 0.1)",
+                                                        color: "primary.main",
+                                                        fontWeight: 500,
+                                                        borderRadius: 2,
+                                                        "&:hover": {
+                                                            bgcolor: "primary.light",
+                                                            transform: "translateY(-1px)",
+                                                        },
+                                                        transition: "all 0.2s ease",
+                                                        cursor: "default",
+                                                        border: "none",
+                                                    }}
+                                                />
+                                            ))}
+                                        </Box>
+                                    </Box>
                                 </motion.div>
-                            );
-                        })}
-                    </div>
-                </div>
-            </div>
-        </section>
+                            </Grid>
+                        ))}
+                    </Grid>
+                </Box>
+            </Container>
+        </Box>
     );
 }
