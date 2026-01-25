@@ -320,9 +320,7 @@ export default function RootLayout({
           />
         ))}
       </head>
-      <body
-        className={`${inter.variable} font-sans antialiased bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100 transition-colors duration-300`}
-      >
+      <body className={inter.variable}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

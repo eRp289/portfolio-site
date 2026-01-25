@@ -1,9 +1,3 @@
-import { clsx, type ClassValue } from "clsx"
-
-export function cn(...inputs: ClassValue[]) {
-  return clsx(inputs)
-}
-
 // Debounce function to limit how often a function can run
 export function debounce<T extends (...args: any[]) => any>(
   func: T,
